@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams, ToastController, PickerController, NavController, Platform } from '@ionic/angular';
+import { ModalController, NavParams, ToastController, PickerController, NavController } from '@ionic/angular';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AppConstants } from '../../providers/constant/constant';
 import { LoadingController } from '@ionic/angular';
@@ -11,7 +11,6 @@ import {ActionSheet, ActionSheetOptions} from '@ionic-native/action-sheet/ngx';
 import {ActivatedRoute, Router} from "@angular/router";
 import {DomSanitizer} from '@angular/platform-browser';
 import {ImageSlider} from "../image-slider/image-slider.page";
-import { imagePreview } from "../image-preview/image-preview.page";
 
 @Component({
     selector: 'app-checklist-modal',
@@ -23,7 +22,6 @@ export class ChecklistModalPage implements OnInit {
     modelId: number;
     serviceid: any;
     picCompleted: boolean = false;
-    isinspection: boolean = false;
     inspection_type: any;
     apiurl: any;
     updatefields: any = {};
@@ -36,7 +34,6 @@ export class ChecklistModalPage implements OnInit {
     defaultContent: any;
     value: any;
     field: any;
-    randomNumber: number = 0;
 
     buttonLabels = ['Take Photo', 'Upload from Library'];
     public subSection: number;
@@ -79,8 +76,7 @@ export class ChecklistModalPage implements OnInit {
         private router: Router,
         public loadingController: LoadingController,
         private actionSheet: ActionSheet,
-        private sanitizer: DomSanitizer,
-        private platform: Platform
+        private sanitizer: DomSanitizer
     ) {
         this.apiurl = this.appConst.getApiUrl();
         this.subSection = 0;
@@ -96,8 +92,6 @@ export class ChecklistModalPage implements OnInit {
         this.modalTitle = this.navParams.data.paramTitle;
         this.user_id = this.navParams.data.user_id;
         this.updatefields = this.navParams.data.current_updates;
-        this.isinspection = this.navParams.data.isinspection;
-        this.randomNumber=this.randomNumberGenerate();
         this.loadChecklist();
 
     }
@@ -118,26 +112,12 @@ export class ChecklistModalPage implements OnInit {
             }
         }, 1000);
     }
-    randomNumberGenerate(){
-        return Math.floor(Math.random()*(9999999999-99999+1)+99999);
-    }
+
     urlSanitize(url) {
         console.log(url);
         url = this.sanitizer.bypassSecurityTrustResourceUrl(url);
         console.log(url);
         return url;
-    }
-    async openConDocViewPDF(pdf, fieldlabel){
-        if (pdf.imgpath != ''){
-            var url = this.apiurl.replace('phoneapi/','')+pdf.imgpath;
-            if (this.platform.is('android')) {
-                url = 'https://docs.google.com/viewer?url=' + encodeURIComponent(url);
-            }
-            console.log('opening pdf -> ',this.apiurl.replace('phoneapi/','')+pdf.imgpath)
-            var ref = window.open(url, '_blank', 'location=no');
-        }else{
-            console.log('No path to open pdf')
-        }
     }
     loadChecklist() {
         var dataLabel = this.appConst.workOrder[this.serviceid][this.field]["photos"];
@@ -297,6 +277,7 @@ export class ChecklistModalPage implements OnInit {
                         component: ImageModalPage,
                         componentProps: {
                             "base64Image": data['body']['base64'],
+                            "noteContent": data['body']['noteContent'],
                             "paramTitle": "View Photo",
                             "serviceid": this.serviceid,
                             "columnname": this.field,
@@ -359,7 +340,6 @@ export class ChecklistModalPage implements OnInit {
         modal.onDidDismiss().then((dataReturned) => {
             if (dataReturned !== null) {
                 this.dataReturned = dataReturned.data;
-                this.randomNumber=this.randomNumberGenerate();
                 //alert('Modal Sent Data :'+ dataReturned);
             }
         });
@@ -460,9 +440,14 @@ export class ChecklistModalPage implements OnInit {
         headers.append('Content-Type', 'application/json');
         headers.append('Access-Control-Allow-Origin', '*');
 
-        var completed = 'Yes';
-        this.picCompleted = true;
-        this.appConst.workOrder[this.serviceid][this.field].complete_category = 'yes'
+        var completed = 'no';
+        this.picCompleted = event.currentTarget.checked;
+        if (event.currentTarget.checked) {
+            completed = 'yes';
+            this.appConst.workOrder[this.serviceid][this.field].complete_category = 'yes'
+        }else{
+            this.appConst.workOrder[this.serviceid][this.field].complete_category = 'no'
+        }
 
         var params = {
             serviceid: this.serviceid,
@@ -519,23 +504,5 @@ export class ChecklistModalPage implements OnInit {
 
     toggleHelper(columnname){
         this.checklisthelper[columnname] = (this.checklisthelper[columnname] == 1) ? 0 : 1;
-    }
-
-    async imagepreview(imagepath){
-        console.log('welocme to imagepreview', imagepath);
-        var modal = await this.modalCtrl.create({
-            component: imagePreview,
-            componentProps: {
-                "imageFullpath": imagepath,
-                "paramTitle": "View Photo",
-                "user_id": this.user_id,
-            }
-        });
-        modal.onDidDismiss().then((dataReturned) => {
-            if (dataReturned !== null) {
-                this.dataReturned = dataReturned.data;
-            }
-        });
-        return await modal.present();
     }
 }

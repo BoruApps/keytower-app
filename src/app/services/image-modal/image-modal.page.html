@@ -40,35 +40,15 @@
             </svg>
         </div>
     </div>
-    <div *ngIf="showDrawTools">
-        <ion-select (ionChange)="addColorUpdate()" [(ngModel)]="drawSelectedColor" name="drawColour" style="width: fit-content;padding-left: 0px;">
-            <ion-select-option value="white">White</ion-select-option>
-            <ion-select-option value="black">Black</ion-select-option>
-            <ion-select-option value="red">Red</ion-select-option>
-            <ion-select-option value="blue">Blue</ion-select-option>
-            <ion-select-option value="green">Green</ion-select-option>
-            <ion-select-option value="yellow">Yellow</ion-select-option>
-        </ion-select>
-    </div>
-    <ion-card>
-        <ion-item [ngClass]=" elementSelected === 'rotate' ? '' : 'range-display'">
-            <ion-range min="0" max="360" step="5" snaps="true" ticks="false" color="secondary"
-                       (ionChange)="rotateImage($event)"></ion-range>
-        </ion-item>
-        <ion-input style="display:none" type="text" ng-show="false" [(ngModel)]="photo.base64Image" name="base64Image"
-                   value="{{base64Image}}"></ion-input>
-        <div *ngIf="is_delete !== true">
-            <ion-card-header>
-                <ion-card-subtitle>
-                    <ion-label position="stacked">Image Description</ion-label>
-                </ion-card-subtitle>
-            </ion-card-header>
 
-            <ion-card-content>
-                <ion-input type="text" oninput="" size="100" required="" [(ngModel)]="photo.title" name="notecontent"
-                           class="title-input" placeholder="Enter a description..."></ion-input>
-            </ion-card-content>
-        </div>
+    <ion-item [ngClass]=" elementSelected === 'rotate' ? '' : 'range-display'">
+        <ion-range min="0" max="360" step="5" snaps="true" ticks="false" color="secondary"
+                   (ionChange)="rotateImage($event)"></ion-range>
+    </ion-item>
+    <ion-input style="display:none" type="text" ng-show="false" [(ngModel)]="photo.base64Image" name="base64Image"
+               value="{{base64Image}}"></ion-input>
+
+    <ion-card>
         <div *ngIf="is_delete === true">
             <ion-card-header>
                 <ion-card-subtitle style="text-align: center;">
@@ -77,6 +57,19 @@
             </ion-card-header>
         </div>
     </ion-card>
+    <ion-card>
+        <ion-card-header>
+            <ion-card-subtitle>
+                <ion-label position="stacked">Image Description</ion-label>
+            </ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+            <ion-input type="text" oninput="" size="100" required="" [(ngModel)]="photo.title" name="notecontent"
+                       class="title-input" placeholder="Enter a description..."></ion-input>
+        </ion-card-content>
+    </ion-card>
+
     <div class="button-grouping ion-padding">
         <ion-button (click)="uploadImage(photo,false)" size="large" expand="block" color="primary" type="submit">
             <ion-text>Save</ion-text>
@@ -84,7 +77,7 @@
         <ion-button (click)="confirmCancelImage(photo)" size="large" expand="block" color="primary" type="submit">
             <ion-text>Cancel</ion-text>
         </ion-button>
-        <ion-button *ngIf="is_delete === true" (click)="confirmDeleteImage(photo)" size="large" expand="block"
+        <ion-button *ngIf="is_delete === true && imgCategory != 'ConDoc' " (click)="confirmDeleteImage(photo)" size="large" expand="block"
                     color="danger" type="submit">
             <ion-text>Delete</ion-text>
         </ion-button>

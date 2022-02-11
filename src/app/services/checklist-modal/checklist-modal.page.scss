@@ -5,9 +5,8 @@
 
 .checklist-thumb-list{
   display: inline-block;
-  margin: 0px 5px;
   .dropdown-arrow {
-    background: #F4782B;
+    background: #2759B3;
     color: #ffffff;
     width: 100%;
     padding: .4em .5em;
@@ -75,7 +74,7 @@ ion-list {
     width: 100%;
     max-width: 100% !important;
     min-height: 16px;
-    
+
   }
   ion-text {
     width: 100%;
@@ -105,16 +104,14 @@ ion-list {
     padding: 0;
     margin: 0;
     flex-wrap:wrap;
-    li {
-      margin-bottom: 10px;
-    }
   }
 
 }
 
 ion-content {
   ion-list {
-    margin-bottom: 0 !important;
+    padding: 10px;
+    margin-bottom: 0px;
   }
   .close-btn {
     border: 1px solid;
@@ -135,8 +132,6 @@ ion-content {
     border: 1px solid;
     border-radius: 1em;
     margin: .5em 0px;
-    background: white;
-    overflow: hidden;
     ion-select {
       max-width: 100%;
     }
@@ -154,8 +149,7 @@ ion-content {
 }
 
 form {
-  margin-bottom: 0px;
-  padding-bottom: 0px;
+  margin: 0 0 2em !important;
 }
 
 .img-section-display {
@@ -196,7 +190,7 @@ form {
   }
 }
 .item-background-color{
-  --ion-item-background: #F2F2F2;
+  --ion-item-background: #f1f1f1;
   border: 1px solid #767676;
   border-radius: 10px;
   overflow: hidden;
@@ -206,4 +200,8 @@ form {
 .disabled-field{
   pointer-events: none;
   display: none;
+}
+.ion-item-nopadding{
+  --padding-start: 0px;
+  --inner-padding-end: 0px;
 }

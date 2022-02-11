@@ -1,13 +1,9 @@
 <ion-header>
-    <ion-toolbar text-center>
-        <ion-buttons slot="primary">
-            <ion-button type="button" name="close" class="ion-close-center" size="large" (click)="closeModal()">
-                <ion-icon name="close" size="large"></ion-icon>
-            </ion-button>
-        </ion-buttons>
-        <ion-title text-center>Under Review</ion-title>
+  <ion-toolbar text-center>
+        <ion-title>Under Review</ion-title>
     </ion-toolbar>
 </ion-header>
+
 <ion-content>
     <ion-list lines="full">
         <div *ngIf="count_underreview > 0">
@@ -32,6 +28,6 @@
             </ion-badge>
           </ion-item>
         </div>
-          <p class="ion-padding" *ngIf="count_underreview == 0">No work orders available for this section</p>
+          <p class="ion-padding" *ngIf="count_underreview == 0">No Jobs available for this section</p>
     </ion-list>
 </ion-content>

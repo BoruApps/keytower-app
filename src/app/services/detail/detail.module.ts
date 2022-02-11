@@ -15,16 +15,15 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
 import { ImageModalPage } from '../image-modal/image-modal.page';
-import { imagePreview } from "../image-preview/image-preview.page";
 import { ChecklistModalPage } from '../checklist-modal/checklist-modal.page';
 import {ImageConfirmModalPage} from "../image-confirm-modal/image-confirm-modal.page";
-import { ImageGallery } from "../image-gallery/image-gallery.page";
+import {AddItemModalPage} from "../add-item/add-item.page";
+import {AddAssetModalPage} from "../add-asset/add-asset.page";
+import {DailsNotesModalPage} from "../daily-notes/daily-notes.page";
 import { ImageSlider } from "../image-slider/image-slider.page";
-import { InstallationForm } from "../Installation-Form/Installation-Form.page";
-import { inspectionsform } from "../inspections-form/inspections-form.page";
-import { servicecompletionform } from "../ServiceCompletion-form/ServiceCompletion-form.page";
-import { ElectricalInstallationForm } from "../ElectricalInstallation-Form/ElectricalInstallation-Form.page";
-import { RoofInstallationForm } from "../RoofInstallation-Form/RoofInstallation-Form.page";
+import { SoWAll } from "../SoW-All/SoW-All.page";
+import {CommentsModalPage} from '../comments/comments.page';
+
 const routes: Routes = [
   {
     path: '',
@@ -39,8 +38,8 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [DetailPage, ImageModalPage, ChecklistModalPage, ImageConfirmModalPage,ImageGallery,ImageSlider,imagePreview,InstallationForm,inspectionsform,ElectricalInstallationForm,RoofInstallationForm,servicecompletionform],
-    entryComponents: [ImageModalPage, ChecklistModalPage, ImageConfirmModalPage,ImageGallery,ImageSlider,imagePreview,InstallationForm,inspectionsform,ElectricalInstallationForm,RoofInstallationForm,servicecompletionform],
+    declarations: [DetailPage, ImageModalPage, ChecklistModalPage, ImageConfirmModalPage,ImageSlider, SoWAll, AddItemModalPage,AddAssetModalPage, DailsNotesModalPage, CommentsModalPage],
+    entryComponents: [ImageModalPage, ChecklistModalPage, ImageConfirmModalPage,ImageSlider, SoWAll, AddItemModalPage,AddAssetModalPage, DailsNotesModalPage, CommentsModalPage],
     providers: [
         StatusBar,
         SplashScreen,

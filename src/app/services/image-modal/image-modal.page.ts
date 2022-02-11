@@ -48,15 +48,16 @@ export class ImageModalPage implements OnInit {
     is_delete:any;
     documentid:any;
     fileName:any;
-    imagefrom:any;
+    imgCategory:any;
+    otherData:any;
     base64Image:string[];
 
     btnList = [
         { name:"circle", class:"radio-button-off" },
         { name:"square", class:"square-outline" },
+        { name:"search", class:"search-plus" },
         { name:"arrow", class:"arrow-forward" },
         { name:"brush", class:"brush" },
-        { name:"search", class:"search-plus" },
         { name:"undo", class:"undo" },
         { name:"redo", class:"redo" },
         { name:"crop", class:"crop" },
@@ -72,40 +73,8 @@ export class ImageModalPage implements OnInit {
         base64Image: '',
         columnname: ''
     };
-    allTitlelist = {
-        cf_photo_checklist_1: 'Front_House',
-        cf_photo_checklist_2: 'Ext_Walls_Ele_Eav',
-        cf_photo_checklist_3: 'Attic_Structural',
-        cf_photo_checklist_4: 'MSP_D_Plate',
-        cf_photo_checklist_5: 'MSP_Brkrs_DP',
-        cf_photo_checklist_6: 'MSP_Cls',
-        cf_photo_checklist_7: 'MSP_Stck',
-        cf_photo_checklist_8: 'Sub_D_Cover',
-        cf_photo_checklist_9: 'Surr_MSP',
-        cf_photo_checklist_10: 'Cls_Elec_M_Number',
-        cf_photo_checklist_11: 'Gas_Meter',
-        cf_photo_checklist_12: 'Dig_A',
-        cf_photo_checklist_13: 'Ovr_Feed',
-        cf_photo_checklist_14: 'Ovr_Feed_Drp',
-        cf_photo_checklist_15: 'Und_Utl_Wire',
-        cf_photo_checklist_16: 'Roof_Plane',
-        cf_photo_checklist_17: 'Dmg_Roof',
-        cf_photo_checklist_18: 'Tile_Cond',
-        cf_photo_checklist_19: 'Tile_Thk',
-        cf_photo_checklist_20: 'Tilt_Mnt',
-        cf_photo_checklist_21: 'Ext_Sol',
-        cf_photo_checklist_22: 'Ext_Stckr_Inv',
-        cf_photo_checklist_23: 'Pat_Cov',
-        cf_photo_checklist_24: 'Gate_MS',
-        cf_photo_checklist_25: 'Batt_Wall_Loc',
-        cf_photo_checklist_26: 'Add_Rqst',
-        cf_photo_checklist_27: 'Back_Door',
-        cf_photo_checklist_28: 'MSP_Gnd',
-    };
     elementSelected: any;
     touchTracker: any;
-    showDrawTools: any;
-    drawSelectedColor: any;
 
     protected state;
     protected mods;
@@ -156,23 +125,18 @@ export class ImageModalPage implements OnInit {
     @ViewChild('img',{static:false}) img: ElementRef;
     ngOnInit() {
         //console.table(this.navParams);
-        console.log('ngOnInit ========== appConst.workOrder ========== ',this.appConst.workOrder);
         this.modelId = this.navParams.data.paramID;
         this.serviceid = this.navParams.data.serviceid;
         this.columnname = this.navParams.data.columnname;
         this.modalTitle = this.navParams.data.paramTitle;
-        this.photo.title = this.allTitlelist[this.navParams.data.columnname];
+        this.photo.title = this.navParams.data.noteContent;
         this.user_id = this.navParams.data.user_id;
         this.index = this.navParams.data.columnIndex;
         this.is_delete = this.navParams.data.is_delete;
         this.documentid = this.navParams.data.documentid;
         this.subSection = this.navParams.data.subSection;
-        this.imagefrom = this.navParams.data.imagefrom;
-        this.showDrawTools = false;
-        this.drawSelectedColor = 'black';
-        console.log('columnname = ',this.columnname);
-        console.log('index = ',this.index);
-        console.log('subSection = ',this.subSection);
+        this.imgCategory = this.navParams.data.imgCategory;
+        this.otherData = this.navParams.data.otherData;
     }
 
     ngAfterViewInit() {
@@ -190,20 +154,9 @@ export class ImageModalPage implements OnInit {
         this.elementSelected = btn;
         if(this._CANVAS.isDrawingMode) this._CANVAS.isDrawingMode = false;
         console.log(this.elementSelected);
-
-        if (this.elementSelected == 'brush' || this.elementSelected == 'circle' || this.elementSelected == 'arrow' || this.elementSelected == 'square'){
-            this.showDrawTools = true;
-        }else{
-            this.showDrawTools = false;
-        }
-
         switch(this.elementSelected) {
             case "brush":
                 this._CANVAS.isDrawingMode = (this._CANVAS.isDrawingMode) ? false: true;
-                if (this._CANVAS.isDrawingMode){
-                    this._CANVAS.freeDrawingBrush.color = this.drawSelectedColor;
-                    console.log('this.drawSelectedColor',this.drawSelectedColor)
-                }
             break;
             case "undo":
                 this.undoImg();
@@ -232,6 +185,7 @@ export class ImageModalPage implements OnInit {
     }
 
     drawCircle() {
+
         let x = ((this.touchTracker.start.x - this.touchTracker.end.x) > 0) ? this.touchTracker.end.x : this.touchTracker.start.x;
 
 
@@ -244,7 +198,7 @@ export class ImageModalPage implements OnInit {
                 radius: Math.abs(this.touchTracker.start.x - this.touchTracker.end.x)/2,
                 fill: 'transparent',
                 strokeWidth: 4,
-                stroke: this.drawSelectedColor
+                stroke: '#000000'
             })
         );
         
@@ -282,18 +236,6 @@ export class ImageModalPage implements OnInit {
             paintFirst: 'stroke',
             fontSize: 20
         }));
-
-        var self = this;
-        this._CANVAS.on("text:editing:entered", function (e) {
-            if (e.target.type === "i-text") {
-                if (e.target.text === "Touch here to edit Text") {
-                    e.target.text = "";
-                    e.target.hiddenTextarea.value = '';
-                    self._CANVAS.renderAll();
-                };
-            }
-        });
-
         this.updateModifications(true);
     }
     
@@ -311,7 +253,7 @@ export class ImageModalPage implements OnInit {
                 height: Math.abs(this.touchTracker.start.y - this.touchTracker.end.y),
                 fill: 'transparent',
                 strokeWidth: 4,
-                stroke: this.drawSelectedColor
+                stroke: '#000000'
             })
         );
         this.updateModifications(true);
@@ -325,7 +267,7 @@ export class ImageModalPage implements OnInit {
         var cwidth = this.platform.width()*0.8;
         var cheight = this.platform.height()*0.6;
         let ratio = Math.min((cheight/imgHeight), (cwidth/imgWidth));
-       
+
         this._CANVAS.setDimensions({width:imgWidth * ratio, height:imgHeight * ratio});
 
 
@@ -434,7 +376,7 @@ export class ImageModalPage implements OnInit {
         ];
 
         var pline = new fabric.Polyline(points, {
-            fill: this.drawSelectedColor,
+            fill: 'white',
             stroke: 'black',
             opacity: 1,
             strokeWidth: 1,
@@ -520,16 +462,9 @@ export class ImageModalPage implements OnInit {
         }
     }
 
-    addColorUpdate(){
-        if (this._CANVAS.isDrawingMode){
-            this._CANVAS.freeDrawingBrush.color = this.drawSelectedColor;
-            console.log('change this.drawSelectedColor',this.drawSelectedColor)
-        }
-    }
-
-    async closeModal(data = 'Wrapped Up!') {
+    async closeModal() {
         const onClosedData: string = "Wrapped Up!";
-        await this.modalController.dismiss(data);
+        await this.modalController.dismiss(onClosedData);
     }
 
     loading: any;
@@ -600,118 +535,112 @@ export class ImageModalPage implements OnInit {
         headers.append("Accept", 'application/json');
         headers.append('Content-Type', 'application/json');
         headers.append('Access-Control-Allow-Origin', '*');
+        var date = new Date();
+        var joinDate = this.addZero(date.getMonth() + 1) + "-" + this.addZero(date.getDate()) + "-" + date.getFullYear();
 
         await this.GetCanvasAtResoution();
 
         var imageData = this.imageData;
-
-        if(delete_needed === true){
-            var formDataD = {
-                'serviceid':this.serviceid,
-                'columnname':this.columnname,
-                'is_delete':'true',
-                'logged_in_user':this.user_id,
-                'index':this.index,
-                'documentid':this.documentid,
-                'notecontent':data.title,
-                'mode':'image_upload',
-            };
-        }else{
+        if (delete_needed === false) {
             if (this._CANVAS.toDataURL()) {
                 var bs64img = this._CANVAS.toDataURL();
-                var blob = this.dataURLtoBlob(bs64img);
+                imageData = bs64img.split(',')[1];
             }
-
-            var formData = new FormData();
-            formData.append("blob", blob);
-            formData.append("serviceid", this.serviceid);
-            formData.append("columnname", this.columnname+'');
-            formData.append("is_delete", 'false');
-            formData.append("logged_in_user", this.user_id);
-            formData.append("index", this.index);
-            formData.append("documentid", this.documentid);
-            formData.append("notecontent", data.title);
-            formData.append("mode", 'image_upload');
-            formData.append("imagefrom", this.imagefrom);
         }
 
-        var postParam = (delete_needed === true) ? formDataD : formData;
+        var param = {
+            'base64Image':imageData,
+            'serviceid':this.serviceid,
+            'columnname':this.columnname,
+            'is_delete':delete_needed,
+            'logged_in_user':this.user_id,
+            'index':this.index,
+            'documentid':this.documentid,
+            'notecontent':data.title,
+            'imgCategory':this.imgCategory,
+            'mode':'image_upload',
+            'current_app_date': joinDate,
+        };
 
-        console.log('adding formData', postParam);
+        if(this.otherData != undefined && this.otherData != ''){
+            param['otherData'] = this.otherData;
+        }
+
+        console.log('adding photo for', param.serviceid);
+        console.log('adding photo columnname', param.columnname);
+        console.log('need to delete image', param.is_delete);
 
         this.showLoading();
-        this.httpClient.post(this.apiurl + "postPhotos.php", postParam, {headers: headers, observe: 'response'})
+        this.httpClient.post(this.apiurl + "postPhotos.php", param, {headers: headers, observe: 'response'})
             .subscribe(data => {
                 this.hideLoading();
-                //console.log(data['_body']);
-                if (data['body']['success'] == true) {
-                    if(this.columnname != undefined && this.columnname+'' !== ''){
-                        if (delete_needed === true){
-                            let imgLoc = this.appConst.workOrder[this.serviceid][this.columnname]['photos'][this.index]['photos'];
-                            let position = -1;
-                            for(var index = 0; index < imgLoc.length; index++) {
-                                console.log(this.documentid);
-                                (function(elm) {
-                                    position = imgLoc[index].findIndex(function(obj, key) {
-                                        return (obj.documentid === elm.documentid);
-                                    });
-    
-                                    if(position > -1) {
-                                        console.log(index, position);
-                                        elm.appConst.workOrder[elm.serviceid][elm.columnname]['photos'][elm.index]['photos'][index].splice(position,1);
-                                    }
-                                })(this);
-                            }
-                            this.presentToastPrimary('Photo deleted successfully\n');
-                            this.closeModal(data['body']['data']);
-                        }else{
-                            if(this.appConst.workOrder[this.serviceid][this.columnname]['photos'][this.index]['photos'][this.subSection] == undefined) {
-                                    this.appConst.workOrder[this.serviceid][this.columnname]['photos'][this.index]['photos'][this.subSection] = [
-                                        {
-                                            imgpath:data['body']['data']['image_path'],
-                                            documentid:data['body']['data']['image_id'],
-                                            userid: this.user_id
-                                        }
-                                    ];
-                            }
-                            else {
-                                this.appConst.workOrder[this.serviceid][this.columnname]['photos'][this.index]['photos'][this.subSection].push({
-                                    imgpath:data['body']['data']['image_path'],
-                                    documentid:data['body']['data']['image_id']
+
+                if (data['body']['success'] == true && this.columnname != undefined) {
+                    if (delete_needed === true){
+                        let imgLoc = this.appConst.workOrder[this.serviceid][this.columnname]['photos'][this.index]['photos'];
+                        let position = -1;
+                        for(var index = 0; index < imgLoc.length; index++) {
+                            console.log(this.documentid);
+                            (function(elm) {
+                                position = imgLoc[index].findIndex(function(obj, key) {
+                                    return (obj.documentid === elm.documentid);
                                 });
-                            }
-                            console.log(' ========== appConst.workOrder ========== ',this.appConst.workOrder);
-                            this.presentToastPrimary('Photo saved successfully\n');
-                            this.closeModal(data['body']['data']);
+
+                                if(position > -1) {
+                                    console.log(index, position);
+                                    elm.appConst.workOrder[elm.serviceid][elm.columnname]['photos'][elm.index]['photos'][index].splice(position,1);
+                                }
+                            })(this);
                         }
+                        this.presentToastPrimary('Photo deleted successfully\n');
+                        this.closeModal();
                     }else{
-                        if (delete_needed === true){
-                            if (data['body']['success'] == true){
-                                console.log('Photo saved successfully');
-                                this.presentToastPrimary('Photo saved successfully\n');
-                                this.modalController.dismiss(
+                        if(this.appConst.workOrder[this.serviceid][this.columnname]['photos'][this.index]['photos'][this.subSection] == undefined) {
+                                this.appConst.workOrder[this.serviceid][this.columnname]['photos'][this.index]['photos'][this.subSection] = [
                                     {
-                                        'is_delete':true,
-                                        'documentid' : this.documentid
+                                        imgpath:data['body']['data']['image_path'],
+                                        documentid:data['body']['data']['image_id'],
+                                        userid: this.user_id
                                     }
-                                );
-                            }else{
-                                console.log('Delete. failed');
-                                this.presentToast('Delete failed! Please try again \n');
-                            }
-                        }else{
-                            if (data['body']['success'] == true){
-                                console.log('Photo saved successfully');
-                                this.presentToastPrimary('Photo saved successfully\n');
-                                this.modalController.dismiss(data['body']['data']);
-                            }else{
-                                console.log('upload failed');
-                                this.presentToast('Upload failed! Please try again \n');
-                            }
+                                ];
                         }
+                        else {
+                            this.appConst.workOrder[this.serviceid][this.columnname]['photos'][this.index]['photos'][this.subSection].push({
+                                imgpath:data['body']['data']['image_path'],
+                                documentid:data['body']['data']['image_id']
+                            });
+                        }
+                        console.log(this.appConst.workOrder);
+                        this.presentToastPrimary('Photo saved successfully\n');
                         this.closeModal();
                     }
-                }else {
+                }else if (this.imgCategory == 'ConDoc' || this.imgCategory == 'dailyNotes' || this.imgCategory == 'jsaDoc'){
+                    if (delete_needed === true){
+                        if (data['body']['success'] == true){
+                            console.log('Photo saved successfully');
+                            this.presentToastPrimary('Photo saved successfully\n');
+                            this.modalController.dismiss(
+                                {
+                                    'is_delete':true,
+                                    'imgCategory':this.imgCategory,
+                                    'documentid' : this.documentid
+                                }
+                            );
+                        }else{
+                            console.log('Delete. failed');
+                            this.presentToast('Delete failed! Please try again \n');
+                        }
+                    }else{
+                        if (data['body']['success'] == true){
+                            console.log('Photo saved successfully');
+                            this.presentToastPrimary('Photo saved successfully\n');
+                            this.modalController.dismiss(data['body']['data']);
+                        }else{
+                            console.log('upload failed');
+                            this.presentToast('Upload failed! Please try again \n');
+                        }
+                    }
+                } else {
                     if (this.is_delete === true){
                         console.log('Delete. failed');
                         this.presentToast('Delete failed! Please try again \n');
@@ -719,7 +648,6 @@ export class ImageModalPage implements OnInit {
                         console.log('upload failed');
                         this.presentToast('Upload failed! Please try again \n');
                     }
-                    this.closeModal();
                 }
             }, error => {
                 this.hideLoading();
@@ -727,17 +655,11 @@ export class ImageModalPage implements OnInit {
                 //console.log(error.message);
                 //console.error(error.message);
                 this.presentToast("Upload failed! Please try again \n" + error.message);
-                this.closeModal();
             });
     }
 
-    dataURLtoBlob(dataurl) {
-        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-        while (n--) {
-            u8arr[n] = bstr.charCodeAt(n);
-        }
-        return new Blob([u8arr], {type: mime});
+    addZero(n) {
+        return n < 10 ? '0' + n : n;
     }
 
     GetCanvasAtResoution ()
@@ -768,31 +690,6 @@ export class ImageModalPage implements OnInit {
             this._CANVAS.renderAll();
             this._CANVAS.calcOffset();
         }
-    }
-
-    async openConfirmModal(serviceid,columnname) {
-        const modal = await this.modalCtrl.create({
-            component: ImageConfirmModalPage,
-            componentProps: {
-                "paramTitle": "Confirm",
-                "serviceid": serviceid,
-                "columnname": columnname,
-                "user_id": this.user_id,
-            }
-        });
-
-        modal.onDidDismiss().then((dataReturned) => {
-            if (dataReturned !== null) {
-                this.dataReturned = dataReturned.data;
-                //alert('Modal Sent Data :'+ dataReturned);
-            }
-        });
-
-        return await modal.present();
-    }
-
-    goToDetail(){
-        
     }
 
     async presentToast(message: string) {

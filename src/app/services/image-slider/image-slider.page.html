@@ -1,19 +1,20 @@
 <ion-header>
-    <ion-toolbar>
+    <ion-toolbar text-center>
         <ion-buttons slot="primary">
             <ion-button type="button" name="close" class="ion-close-center" size="large" (click)="closeModal()">
                 <ion-icon name="close" size="large"></ion-icon>
             </ion-button>
         </ion-buttons>
-        <ion-title text-center>
+        <ion-title>
             <ion-label class="label-text viewedit-title" position="stacked">View Photos</ion-label>
         </ion-title>
     </ion-toolbar>
 </ion-header>
+
 <ion-content class="ion-padding">
     <ion-slides #sliderRef pager="true">
         <ion-slide *ngFor="let image of allSliderImages">
-            <img src="{{this.apiurl.replace('phoneapi/','')}}{{image.imgpath}}?{{randomNumber}}">
+            <img src="{{this.apiurl.replace('phoneapi/','')}}{{image.imgpath}}">
         </ion-slide>
     </ion-slides>
     <div class="button-grouping ion-padding">

@@ -6,11 +6,11 @@
   "type": "angular",
   "proxies": [
     {
-      "path": "/keytower/*",
+      "path": "/keytower71/*",
       "proxyUrl": "http://devl06.borugroup.com"
     },
     {
-      "path": "/keytower/*",
+      "path": "/keytower71/*",
       "proxyUrl": "http://localhost"
     },
     {

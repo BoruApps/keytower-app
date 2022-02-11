@@ -7,6 +7,8 @@ import {Storage} from '@ionic/storage';
 import {AppConstants} from '../providers/constant/constant';
 import {ProfileModalPage} from './profile/profile.page';
 import {LoadingController} from '@ionic/angular';
+import { AllsowActivity } from "./All-sowActivity/All-sowActivity.page";
+import { SoWAll } from "./SoW-All/SoW-All.page";
 
 @Component({
     selector: 'app-services',
@@ -23,6 +25,7 @@ export class ServicesPage implements OnInit {
     count_futureServices: number = 0;
     count_completedServices: number = 0;
     apiurl: any;
+    listofsowactivity: any[] = [];
     service = {
         id: '',
         tower: '', //Will be the Transferee + type of service
@@ -168,9 +171,6 @@ export class ServicesPage implements OnInit {
 
                 if (success == true) {
                     var workorders = data['body']['data'];
-                    console.log('=====================');
-                    console.log('type',type);
-                    console.log('=====================');
                     console.log('services page: workorders', workorders);
                     if (data['body']['count'] > 0) {
                         workorders.forEach(workorder => {
@@ -203,6 +203,51 @@ export class ServicesPage implements OnInit {
             componentProps: {
                 "user_id": this.user_id,
                 "userinfo": this.userinfo,
+            }
+        });
+
+        modal.onDidDismiss().then((dataReturned) => {
+            if (dataReturned !== null) {
+                this.dataReturned = dataReturned.data;
+            }
+        });
+
+        return await modal.present();
+    }
+
+    async showAllsowActivity() {
+        var logged_user = {
+            user_id: this.user_id,
+        }
+        var headers = new HttpHeaders();
+        headers.append("Accept", 'application/json');
+        headers.append('Content-Type', 'application/x-www-form-urlencoded');
+        headers.append('Access-Control-Allow-Origin', '*');
+        this.showLoading();
+        this.httpClient.post(this.apiurl + "getallsowactivity.php", logged_user, {headers: headers, observe: 'response'})
+        .subscribe(data => {
+            this.hideLoading();
+            console.log(data['body']);
+            var success = data['body']['success'];
+            if (success == true) {
+                this.listofsowactivity = data['body']['data'];
+                this.showAllsowActivitypopup();
+            } else {
+                console.log('failed to fetch records');
+            }
+            console.log('listofsowactivity = ',this.listofsowactivity);
+        }, error => {
+            console.log('failed to fetch records');
+        });
+    }
+    async showAllsowActivitypopup() {
+        console.log('opening settings page for user id', this.user_id);
+        const modal = await this.modalCtrl.create({
+            component: AllsowActivity,
+            componentProps: {
+                "user_id": this.user_id,
+                "userinfo": this.userinfo,
+                "listofsowactivity": this.listofsowactivity,
             }
         });
 
