@@ -21,7 +21,7 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
-        Environment.setEnv({
+      Environment.setEnv({
             // Api key for your server
             // (Make sure the api key should have Website restrictions for your website domain only)
             'API_KEY_FOR_BROWSER_RELEASE': 'AIzaSyDmZNVDUxBxJvBByQcLZ4fOkOfgbCGaogA',
