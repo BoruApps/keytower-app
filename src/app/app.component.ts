@@ -21,7 +21,7 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      Environment.setEnv({
+     /*  Environment.setEnv({
             // Api key for your server
             // (Make sure the api key should have Website restrictions for your website domain only)
             'API_KEY_FOR_BROWSER_RELEASE': 'AIzaSyDmZNVDUxBxJvBByQcLZ4fOkOfgbCGaogA',
@@ -29,7 +29,7 @@ export class AppComponent {
             // Api key for local development
             // (Make sure the api key should have Website restrictions for 'http://localhost' only)
             'API_KEY_FOR_BROWSER_DEBUG': 'AIzaSyDmZNVDUxBxJvBByQcLZ4fOkOfgbCGaogA'
-        });
+        }); */
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
