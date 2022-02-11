@@ -7,7 +7,7 @@ import {ModalController, NavParams, ToastController, PickerController, NavContro
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {AppConstants} from '../../providers/constant/constant';
 import {LoadingController} from '@ionic/angular';
-import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
 
 @Component({
     selector: 'add-asset-modal',

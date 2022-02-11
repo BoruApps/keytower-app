@@ -22,7 +22,7 @@ import {AppConstants} from './providers/constant/constant';
 import {GoogleMaps} from '@ionic-native/google-maps';
 import {PhotoViewer} from '@ionic-native/photo-viewer/ngx';
 import {Crop} from '@ionic-native/crop/ngx';
-import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
 
 @NgModule({
     declarations: [AppComponent],
