@@ -1,0 +1,473 @@
+<!---->
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button type="submit" defaultHref="/tabs/services" text="Back"
+                             (click)="saveWO(workorderdetail.workorderid)"></ion-back-button>
+        </ion-buttons>
+        <ion-title class="workorder-title">{{serviceName}}</ion-title>
+        <ion-buttons slot="end">
+            <ion-button type="button" text="View Photos" (click)="goToGallery(workorderdetail.workorderid)">
+                View Photos
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <form #form="ngForm" (ngSubmit)="saveWO(workorderdetail.workorderid)">
+        <ion-list>
+            <div class="readonly-fields">
+                <ion-item-group>
+                    <!--read only fields -->
+                    <ion-item lines="none">
+                        <ion-label class="label-text" position="stacked">Contact Name</ion-label>
+                        <ion-text class="value-text" style="padding-top: 5px;">{{workorderdetail.firstname}} {{workorderdetail.lastname}}</ion-text>
+                    </ion-item>
+                    <ion-item lines="none">
+                        <ion-label class="label-text" position="stacked">Secondary Contact Name</ion-label>
+                        <ion-text class="value-text" style="padding-top: 5px;">{{workorderdetail.secondary_contact_name}}</ion-text>
+                    </ion-item>
+                    <ion-item lines="none">
+                        <ion-label class="label-text" position="stacked">Address Details</ion-label>
+                        <ion-text *ngIf="workorderdetail.mailingpobox" class="value-text" style="padding-top: 5px;">{{workorderdetail.mailingstreet}}
+                            , {{workorderdetail.mailingpobox}}, {{workorderdetail.mailingcity}}
+                            , {{workorderdetail.mailingstate}} {{workorderdetail.mailingzip}}</ion-text>
+                        <ion-text *ngIf="!workorderdetail.mailingpobox" class="value-text" style="padding-top: 5px;">{{workorderdetail.mailingstreet}}
+                            , {{workorderdetail.mailingcity}}
+                            , {{workorderdetail.mailingstate}} {{workorderdetail.mailingzip}}</ion-text>
+                        <ion-button target="_blank" color="secondary"
+                                    href="https://maps.apple.com/?daddr={{workorderdetail.mailingstreet}}, {{workorderdetail.mailingcity}}, {{workorderdetail.mailingstate}} {{workorderdetail.mailingzip}}"
+                                    size="default" slot="end" type="button">
+                            <ion-icon name="navigate" size="large"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+                    <ion-item lines="none">
+                        <ion-label class="label-text" position="stacked">Contact Mobile Phone</ion-label>
+                        <ion-text style="padding-top: 5px;" class="value-text">{{workorderdetail.mobile}}</ion-text>
+                        <ion-button target="_self" color="secondary" (click)="transferee(workorderdetail.mobile)"
+                                    size="default" slot="end" type="button">
+                            <ion-icon name="call" size="large"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+                    <ion-item lines="none">
+                        <ion-label class="label-text" position="stacked">Secondary Contact Mobile Phone</ion-label>
+                        <ion-text style="padding-top: 5px;" class="value-text">{{workorderdetail.secondary_contact_mobile}}</ion-text>
+                        <ion-button target="_self" color="secondary"
+                                    (click)="transferee(workorderdetail.secondary_contact_mobile)" size="default"
+                                    slot="end" type="button">
+                            <ion-icon name="call" size="large"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+                </ion-item-group>
+            </div>
+            <!-- read only fields -->
+
+
+
+            <!-- editable fields -->
+            <div *ngIf="isCompleteWO == 0">
+                <ion-item-group *ngFor="let blockservice of servicedetail">
+                    <div *ngIf="blockservice.blockname != 'Array Information' && (ISServicesForm != 1 || blockservice.blockname == 'Services')">
+                    <ion-item class="blockheader_2" lines="none">
+                    <ion-label style="font-size: 19px;" class="ion-padding blockheader" (click)="toggleSection(blockservice.blockname)">{{blockservice.blockname}}</ion-label>
+                    <ion-icon *ngIf="!blockGroups[blockservice.blockname].open" name="arrow-forward" slot="end"></ion-icon>
+                    <ion-icon *ngIf="blockGroups[blockservice.blockname].open" name="arrow-down" slot="end"></ion-icon>
+                    </ion-item>
+                    <div [ngClass]="{'section-active': blockGroups[blockservice.blockname].open, 'section': !blockGroups[blockservice.blockname].open}">
+                        <!-- editable fields -->
+                        <ion-item *ngIf="ISInstallationForm == 1 && blockservice.blockname != 'Inspection Forms'" detail="false" lines="none">
+                            <div *ngIf="activitytype == 'Electrical Installation'">
+                                <ion-label class="ft-18" style="font-size: 24px;" position="stacked">Electrical Installation Form</ion-label>
+                                <ion-grid>
+                                    <ion-row>
+                                        <ion-col  style="text-align: center;align-items: center!important;display: flex;justify-content:center !important;">
+                                            <ion-text [ngClass]="{'green-text' : workorderdetail.cf_isformsubmittedtoday === true}"  *ngIf = "workorderdetail.cf_ele_formsubmit_count > 0">
+                                                Form Submitted <br> on {{workorderdetail.cf_ele_formsubmit_date}}
+                                            </ion-text>
+                                            <ion-text *ngIf = "workorderdetail.cf_ele_formsubmit_count == 0">
+                                                Form Not Submitted {{workorderdetail.cf_ele_formsubmit_count}}
+                                                {{workorderdetail.cf_ele_formsubmit_date}}
+                                            </ion-text>
+                                        </ion-col>
+                                        <ion-col>
+                                            <div class = "photo-icon" (click)="openElectricalInstallationForm(blockservice.blockname)">
+                                                <span>Open <br>Form</span>
+                                            </div>
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-grid>
+                            </div>
+                            <div *ngIf="activitytype == 'Solar Installation'">
+                                <ion-label class="ft-18" style="font-size: 24px;" position="stacked">Solar Installation Form</ion-label>
+                                <ion-grid>
+                                    <ion-row>
+                                        <ion-col  style="text-align: center;align-items: center!important;display: flex;justify-content:center !important;">
+                                            <ion-text [ngClass]="{'green-text' : workorderdetail.cf_isformsubmittedtoday === true}"  *ngIf = "workorderdetail.cf_formsubmit_count > 0">
+                                                Form Submitted <br> on {{workorderdetail.cf_formsubmit_date}}
+                                            </ion-text>
+                                            <ion-text *ngIf = "workorderdetail.cf_formsubmit_count == 0">
+                                                Form Not Submitted {{workorderdetail.cf_formsubmit_count}}
+                                                {{workorderdetail.cf_formsubmit_date}}
+                                            </ion-text>
+                                        </ion-col>
+                                        <ion-col>
+                                            <div class = "photo-icon" (click)="openInstallationForm(blockservice.blockname)">
+                                                <span>Open <br>Form</span>
+                                            </div>
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-grid>
+                            </div>
+                            <div *ngIf="activitytype == 'Roof Installation'">
+                                <ion-label class="ft-18" style="font-size: 24px;" position="stacked">Roof Installation Form</ion-label>
+                                <ion-grid>
+                                    <ion-row>
+                                        <ion-col  style="text-align: center;align-items: center!important;display: flex;justify-content:center !important;">
+                                            <ion-text [ngClass]="{'green-text' : workorderdetail.cf_isformsubmittedtoday === true}"  *ngIf = "workorderdetail.cf_formsubmit_count > 0">
+                                                Form Submitted <br> on {{workorderdetail.cf_formsubmit_date}}
+                                            </ion-text>
+                                            <ion-text *ngIf = "workorderdetail.cf_formsubmit_count == 0">
+                                                Form Not Submitted {{workorderdetail.cf_formsubmit_count}}
+                                                {{workorderdetail.cf_formsubmit_date}}
+                                            </ion-text>
+                                        </ion-col>
+                                        <ion-col>
+                                            <div class = "photo-icon" (click)="openRoofInstallationForm(blockservice.blockname)">
+                                                <span>Open <br>Form</span>
+                                            </div>
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-grid>
+                            </div>
+                        </ion-item>
+                        <ion-item detail="false" *ngFor="let service of blockservice.fields;" lines="none">
+                            <div>
+                                <ion-label class="ft-18" style="font-size: 22px;" position="stacked">{{service.fieldlabel}}</ion-label>
+                                <div [ngSwitch]="service.uitype" style="font-size: 14px;padding: 10px;">
+                                <!--uitype = 10-->
+                                <ion-text *ngSwitchCase="10">{{service.value}} </ion-text>
+
+                                <!--uitype = 56-->
+                                <div *ngSwitchCase="56">
+                                    <ion-checkbox (ionChange)="addUpdate($event)" *ngIf="service.value == 1" checked="true"
+                                                name="{{service.columnname}}">{{service.value}} </ion-checkbox>
+                                    <ion-checkbox (ionChange)="addUpdate($event)" *ngIf="service.value != 1"
+                                                name="{{service.columnname}}">{{service.value}} </ion-checkbox>
+                                </div>
+
+                                <!--uitype = 15.16-->
+                                <ion-select (ionChange)="addUpdate($event)" *ngSwitchCase="16" name="{{service.columnname}}" value="{{service.value}}">
+                                    <ion-select-option *ngFor="let picklist of service.picklist">{{picklist}}</ion-select-option>
+                                </ion-select>
+
+                                <ion-select (ionChange)="addUpdate($event)" *ngSwitchCase="15" name="{{service.columnname}}" value="{{service.value}}">
+                                    <ion-select-option
+                                            *ngFor="let picklist of service.picklist">{{picklist}}</ion-select-option>
+                                </ion-select>
+
+                                <!--uitype = 33-->
+                                <ion-select (ionChange)="addUpdate($event)" *ngSwitchCase="33" multiple="true" placeholder = "Select One">
+                                    <ion-select-option
+                                            *ngFor="let picklist of service.picklist">{{picklist}}</ion-select-option>
+                                </ion-select>
+
+                                <!-- uitype = 7 -->
+                                <ion-input (ionBlur)="addUpdate($event)" *ngSwitchCase="7" type="number"
+                                        name="{{service.columnname}}" value="{{service.value | number}}"></ion-input>
+                                
+                                <!-- uitype = 9 -->
+                                <ion-input (ionBlur)="addUpdate($event)" *ngSwitchCase="9" type="text"
+                                        name="{{service.columnname}}" value="{{service.value | number}}"
+                                        width="100%"></ion-input>
+                                <!--else-->
+                                <ion-input (ionBlur)="addUpdate($event)" type="text" name="{{service.columnname}}"
+                                        *ngSwitchDefault value="{{service.value}}"></ion-input>
+
+                                <!--uitype = 19.20-->
+                                <ion-textarea (ionBlur)="addUpdate($event)" auto-grow="true" name="{{service.columnname}}"
+                                            rows="3" *ngSwitchCase="19" value="{{service.value}}"
+                                            width="100%"></ion-textarea>
+                                <ion-textarea (ionBlur)="addUpdate($event)" auto-grow="true" name="{{service.columnname}}"
+                                            rows="3" *ngSwitchCase="20" value="{{service.value}}"
+                                            width="100%"></ion-textarea>
+                                
+                                <div *ngSwitchCase="21" >
+
+                                    <ion-grid *ngIf="service.json">
+                                        <ion-row>
+                                            <ion-col *ngIf="blockservice.blockname != 'Inspection Forms' && blockservice.blockname != 'Services' " style="text-align: center;align-items: center!important;display: flex;justify-content:center !important;">
+                                                <ion-text [ngClass]="{'green-text' : completedFields[service.columnname] === true}">
+                                                    {{appConst.workOrder[serviceid][service.columnname]['image_count']}} Photos Added
+                                                    <div *ngIf="completedFields[service.columnname] === true"  class = "green-text">Section Completed</div>
+                                                </ion-text>
+                                            </ion-col>
+                                            <ion-col *ngIf="(blockservice.blockname == 'Inspection Forms' || blockservice.blockname == 'Services') && service.fieldlabel != 'New Inspection'  && service.fieldlabel != 'New Service Form' " style="text-align: center;align-items: center!important;display: flex;justify-content:center !important;">
+                                                <ion-text [ngClass]="{'green-text' : completedFields[service.columnname] === true}">
+                                                    {{appConst.workOrder[serviceid][service.columnname]['forms_count']}} Forms Submitted
+                                                </ion-text>
+                                            </ion-col>
+
+                                            <ion-col>
+                                                <div *ngIf="blockservice.blockname != 'Inspection Forms' && blockservice.blockname != 'Services' "  class = "photo-icon" (click)="openChecklist(workorderdetail.workorderid,inspection_type, service.default, service.value,service.fieldlabel, service.columnname)">
+                                                    <span>Open Section</span>
+                                                </div>
+                                                <div *ngIf="service.fieldlabel == 'Submitted In-Process Inspections' || service.fieldlabel == 'Submitted Final Inspections' || service.fieldlabel == 'Submitted Service Completion'"  class = "photo-icon" (click)="openChecklist(workorderdetail.workorderid,inspection_type, service.default, service.value,service.fieldlabel, service.columnname, true)">
+                                                    <span>Open Section</span>
+                                                </div>
+                                                <div *ngIf="service.fieldlabel == 'New Inspection'"  class = "photo-icon" style="width: 100%;" (click)="openInspectionsForm(workorderdetail.workorderid,inspection_type, service.default, service.value,service.fieldlabel, service.columnname)">
+                                                    <span>Add New</span>
+                                                </div>
+                                                <div *ngIf="service.fieldlabel == 'New Service Form'"  class = "photo-icon" style="width: 100%;" (click)="openServiceCompletionForm(workorderdetail.workorderid,inspection_type, service.default, service.value,service.fieldlabel, service.columnname)">
+                                                    <span>Add New</span>
+                                                </div>
+                                            </ion-col>
+                                        </ion-row>
+                                    </ion-grid>
+
+                                    <ion-textarea *ngIf="!service.json" (ionBlur)="addUpdate($event)" auto-grow="true" name="{{service.columnname}}" rows="3" value="{{service.value}}" width="100%"></ion-textarea>
+                                </div>
+
+                            </div>
+                            </div>
+                        </ion-item>
+                    </div>
+                    </div>
+                </ion-item-group>
+                
+                <div class="readonly-fields">
+                    <ion-item-group>
+                        <br>
+                        <ion-item lines="none">
+                            <ion-text>Array Information</ion-text>
+                        </ion-item>
+                        <br>
+                    </ion-item-group>
+                </div>
+                    
+                <div class="array_info">
+                    <table class="tableizer-table">
+                        <thead>
+                        <tr class="tableizer-firstrow">
+                            <th></th>
+                            <th>Azimuth</th>
+                            <th>Roof Pitch</th>
+                            <th># of Panels</th>
+                            <th>Efficiency</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="orange">Array #1</td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_1_azimuth" name="cf_array_1_azimuth"
+                                           value="{{arrayfields['cf_array_1_azimuth']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_1_roof_pitch" name="cf_array_1_roof_pitch"
+                                           value="{{arrayfields['cf_array_1_roof_pitch']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_1_number_of_panels" name="cf_array_1_number_of_panels"
+                                           value="{{arrayfields['cf_array_1_number_of_panels']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_1_efficiency" name="cf_array_1_efficiency"
+                                           value="{{arrayfields['cf_array_1_efficiency']}}"></ion-input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="orange">Array #2</td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_2_azimuth" name="cf_array_2_azimuth"
+                                           value="{{arrayfields['cf_array_2_azimuth']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_2_roof_pitch" name="cf_array_2_roof_pitch"
+                                           value="{{arrayfields['cf_array_2_roof_pitch']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_2_number_of_panels" name="cf_array_2_number_of_panels"
+                                           value="{{arrayfields['cf_array_2_number_of_panels']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_2_efficiency" name="cf_array_2_efficiency"
+                                           value="{{arrayfields['cf_array_2_efficiency']}}"></ion-input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="orange">Array #3</td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_3_azimuth" name="cf_array_3_azimuth"
+                                           value="{{arrayfields['cf_array_3_azimuth']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_3_roof_pitch" name="cf_array_3_roof_pitch"
+                                           value="{{arrayfields['cf_array_3_roof_pitch']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_3_number_of_panels" name="cf_array_3_number_of_panels"
+                                           value="{{arrayfields['cf_array_3_number_of_panels']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_3_efficiency" name="cf_array_3_efficiency"
+                                           value="{{arrayfields['cf_array_3_efficiency']}}"></ion-input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="orange">Array #4</td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_4_azimuth" name="cf_array_4_azimuth"
+                                           value="{{arrayfields['cf_array_4_azimuth']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_4_roof_pitch" name="cf_array_4_roof_pitch"
+                                           value="{{arrayfields['cf_array_4_roof_pitch']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_4_number_of_panels" name="cf_array_4_number_of_panels"
+                                           value="{{arrayfields['cf_array_4_number_of_panels']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_4_efficiency" name="cf_array_4_efficiency"
+                                           value="{{arrayfields['cf_array_4_efficiency']}}"></ion-input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="orange">Array #5</td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_5_azimuth" name="cf_array_5_azimuth"
+                                           value="{{arrayfields['cf_array_5_azimuth']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_5_roof_pitch" name="cf_array_5_roof_pitch"
+                                           value="{{arrayfields['cf_array_5_roof_pitch']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_5_number_of_panels" name="cf_array_5_number_of_panels"
+                                           value="{{arrayfields['cf_array_5_number_of_panels']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_5_efficiency" name="cf_array_5_efficiency"
+                                           value="{{arrayfields['cf_array_5_efficiency']}}"></ion-input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="orange">Array #6</td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_6_azimuth" name="cf_array_6_azimuth"
+                                           value="{{arrayfields['cf_array_6_azimuth']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_6_roof_pitch" name="cf_array_6_roof_pitch"
+                                           value="{{arrayfields['cf_array_6_roof_pitch']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_6_number_of_panels" name="cf_array_6_number_of_panels"
+                                           value="{{arrayfields['cf_array_6_number_of_panels']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_6_efficiency" name="cf_array_6_efficiency"
+                                           value="{{arrayfields['cf_array_6_efficiency']}}"></ion-input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="orange">Array #7</td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_7_azimuth" name="cf_array_7_azimuth"
+                                           value="{{arrayfields['cf_array_7_azimuth']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_7_roof_pitch" name="cf_array_7_roof_pitch"
+                                           value="{{arrayfields['cf_array_7_roof_pitch']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_7_number_of_panels" name="cf_array_7_number_of_panels"
+                                           value="{{arrayfields['cf_array_7_number_of_panels']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_7_efficiency" name="cf_array_7_efficiency"
+                                           value="{{arrayfields['cf_array_7_efficiency']}}"></ion-input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="orange">Array #8</td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_8_azimuth" name="cf_array_8_azimuth"
+                                           value="{{arrayfields['cf_array_8_azimuth']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_8_roof_pitch" name="cf_array_8_roof_pitch"
+                                           value="{{arrayfields['cf_array_8_roof_pitch']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_8_number_of_panels" name="cf_array_8_number_of_panels"
+                                           value="{{arrayfields['cf_array_8_number_of_panels']}}"></ion-input>
+                            </td>
+                            <td>
+                                <ion-input (ionInput)="addUpdate($event)" class="table-input"
+                                           id="cf_array_8_efficiency" name="cf_array_8_efficiency"
+                                           value="{{arrayfields['cf_array_8_efficiency']}}"></ion-input>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <br>
+
+                <div class="button-grouping ion-padding">
+                    <ion-button (click)="saveWO(workorderdetail.workorderid,true,blocknamedisplay)" expand="full"  expand="block" color="secondary" disabled={{confirmButtonDisabled}}>Confirm {{blocknamedisplay}} Is Complete.
+                    </ion-button>
+                </div>
+            </div>
+
+            <!-- if WO is Completed, Cancelled, Closed, make fields readonly-->
+            <div *ngIf="isCompleteWO == 1">
+                <ion-item detail="false" *ngFor="let service of servicedetail" lines="none">
+                    <ion-label position="stacked">{{service.fieldlabel}}</ion-label>
+                    <div [ngSwitch]="service.uitype">
+                        <div *ngSwitchCase="56">
+                            <ion-text *ngIf="service.value == 1">Yes</ion-text>
+                            <ion-text *ngIf="service.value != 1">No</ion-text>
+                        </div>
+                        <ion-text *ngSwitchDefault>{{service.value}} </ion-text>
+                    </div>
+                </ion-item>
+            </div>
+
+        </ion-list>
+    </form>
+
+</ion-content>

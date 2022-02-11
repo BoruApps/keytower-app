@@ -1,0 +1,150 @@
+ion-badge.ios.status{
+    padding: 10px;
+    border-radius: 50px;
+    margin-bottom: 5px;
+}
+
+ion-text.status-text{
+    color: white !important;
+}
+
+
+ion-input > input {
+    width: 100% !important;
+}
+.anchor-bottom{
+    position: fixed;
+    bottom: 0;
+    /* display: block; */
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.137);
+    z-index: 9999;
+}
+.text-align-center {
+    text-align: center !important;
+}
+ion-select{
+    width:100%;
+    max-width: none;
+}
+
+
+ion-item {
+    &>div:not(.photo-icon) {
+        width: 100% !important;
+    }
+
+    ion-textarea,
+    ion-input {
+        border: 1px solid;
+        width: 100%;
+        border-radius: .5em;
+        padding: 0 0.5em !important;
+        margin-top: 1em;
+    }
+
+    ion-select {
+        padding: .5em !important;
+        border: 1px solid;
+        width: 100%;
+        border-radius: .5em;
+        margin-top: 1em;
+    }
+}
+
+ion-item {
+    position: relative;
+    margin-bottom: .7em;
+}
+
+.green-text{
+    color: #23954b;
+}
+
+.photo-icon {
+    border: 1px solid;
+    width: 80%;
+    border-radius: 0.4em;
+    text-align: center;
+    background: #23954b;
+    color: #ffffff;
+    padding: 8px;
+    font-size: 20px;
+    font-weight: bolder;
+    ion-icon {
+        margin: auto;
+        font-size: 3em;
+    }
+
+    p {
+        margin: 0 0 1em;
+    }
+}
+
+.section{
+    //display: none !important;
+    visibility: hidden !important;
+    opacity: 0;
+    height: 0px;
+    transition: all 2s ease, height 1s ease;
+}
+.section-active{
+   // display: block !important;
+    visibility: visible;
+    opacity: 1;
+    //height: 150px;
+    height: max-content;
+    max-height: auto;
+    transition: all 2s ease, height 1s ease;
+}
+
+.blockheader{
+    //background-color: #F4782B;
+   color: white !important;
+}
+
+.blockheader_2{
+    background-color: #F4782B;
+    --background: #F4782B;
+    --color: white;
+    color: white !important;
+}
+
+table.tableizer-table {
+    font-size: 12px;
+    border: 1px solid #CCC; 
+    font-family: Arial, Helvetica, sans-serif;
+border-radius: 5px;
+} 
+.tableizer-table td {
+    padding: 4px;
+    margin: 3px;
+    border: 1px solid #CCC;
+}
+.tableizer-table th {
+    background-color: #00954C; 
+    color: #FFF;
+    font-weight: bold;
+}
+
+.orange{
+    background-color: #DF782B;
+    color: white;
+}
+
+.table-input{
+    width: 70px;
+}
+
+.label-text{
+    font-size: 18px;
+    max-height: 22px;
+}
+
+.value-text{
+    font-size: 14px;
+}
+
+ion-title.hydrated.ios.title-default.title-ios.workorder-title {
+    padding: 0px 100px 0px 80px;
+}

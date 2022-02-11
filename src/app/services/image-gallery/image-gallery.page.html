@@ -1,0 +1,26 @@
+<ion-header>
+    <ion-toolbar text-center>
+        <ion-buttons slot="primary">
+            <ion-button type="button" name="close" class="ion-close-center" size="large" (click)="closeModal()">
+                <ion-icon name="close" size="large"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>{{serviceName}}'s Photos</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+    <div *ngIf="allImages.length > 0">
+        <ion-item-group *ngFor="let imagesList of allImages | keyvalue">
+            <ion-text class="galleryimage-label" position="stacked">{{imagesList.value.label}}</ion-text>
+            <ion-img class="galleryimage" *ngFor="let image of imagesList.value.images"
+                     (click)="openViewModal(image)"
+                     src="{{this.apiurl.replace('phoneapi/','')}}{{image.imgpath}}"
+                     width="150px"></ion-img>
+            <ion-item lines="none"></ion-item>
+        </ion-item-group>
+    </div>
+    <div class="not-available" *ngIf="allImages.length == 0">
+        <ion-title class="na">There are currently no images for this service</ion-title>
+    </div>
+</ion-content>

@@ -1,0 +1,22 @@
+{
+  "name": "Keytower",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular",
+  "proxies": [
+    {
+      "path": "/keytower/*",
+      "proxyUrl": "http://devl06.borugroup.com"
+    },
+    {
+      "path": "/keytower/*",
+      "proxyUrl": "http://localhost"
+    },
+    {
+      "path": "/*",
+      "proxyUrl": "http://192.241.134.167"
+    }
+  ],
+  "id": "86160881"
+}
