@@ -54,6 +54,7 @@
     "fabric": "^4.6.0",
     "file-system": "^2.2.2",
     "ionic2-calendar": "^0.5.7",
+    "jquery": "^3.6.0",
     "rxjs": "~6.5.1",
     "signature_pad": "^4.0.0",
     "tslib": "^1.9.0",
