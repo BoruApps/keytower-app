@@ -3,10 +3,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {NavController, ToastController, AlertController, ModalController, Platform} from '@ionic/angular';
 import {ActionSheet, ActionSheetOptions} from '@ionic-native/action-sheet/ngx';
 import {PhotoLibrary} from '@ionic-native/photo-library/ngx';
-//import { formatDate } from '@angular/common';
 import {Storage} from '@ionic/storage';
 import {Camera, CameraOptions} from '@ionic-native/camera/ngx';
-//import { File } from '@ionic-native/file/ngx';
 import {ImageModalPage} from '../image-modal/image-modal.page';
 import {AddItemModalPage} from '../add-item/add-item.page';
 import {AddAssetModalPage} from '../add-asset/add-asset.page';
@@ -17,12 +15,11 @@ import {ImageProvider} from '../../providers/image/image';
 import {AppConstants} from '../../providers/constant/constant';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {LoadingController} from '@ionic/angular';
-// @ts-ignore
 import {InAppBrowser} from '@ionic-native/in-app-browser/ngx';
 import { SoWAll } from "../SoW-All/SoW-All.page";
-import jQuery from 'jquery'
-declare var jQuery: jQuery
-import { get } from 'scriptjs'
+
+declare var jQuery: any;
+import { get } from 'scriptjs';
 
 @Component({
     selector: 'app-detail',
