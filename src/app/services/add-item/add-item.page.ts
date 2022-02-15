@@ -183,7 +183,7 @@ export class AddItemModalPage implements OnInit {
         this.barcodeProduct['total'] = (parseFloat(this.barcodeProduct['quantity'])*parseFloat(this.barcodeProduct['unit_price'])).toFixed(2);
     }
 
-    async closeModal(data) {
+    async closeModal(data={}) {
         const onClosedData: string = "Wrapped Up!";
         await this.modalController.dismiss(data);
     }

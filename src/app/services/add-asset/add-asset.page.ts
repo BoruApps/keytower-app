@@ -197,7 +197,7 @@ export class AddAssetModalPage implements OnInit {
         });
     }
 
-    async closeModal(data) {
+    async closeModal(data={}) {
         const onClosedData: string = "Wrapped Up!";
         await this.modalController.dismiss(data);
     }

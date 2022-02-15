@@ -74,7 +74,7 @@
         <ion-button (click)="uploadImage(photo,false)" size="large" expand="block" color="primary" type="submit">
             <ion-text>Save</ion-text>
         </ion-button>
-        <ion-button (click)="confirmCancelImage(photo)" size="large" expand="block" color="primary" type="submit">
+        <ion-button (click)="confirmCancelImage()" size="large" expand="block" color="primary" type="submit">
             <ion-text>Cancel</ion-text>
         </ion-button>
         <ion-button *ngIf="is_delete === true && imgCategory != 'ConDoc' " (click)="confirmDeleteImage(photo)" size="large" expand="block"
