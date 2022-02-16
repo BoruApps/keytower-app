@@ -541,37 +541,53 @@ export class ImageModalPage implements OnInit {
         await this.GetCanvasAtResoution();
 
         var imageData = this.imageData;
-        if (delete_needed === false) {
+        
+        if(delete_needed === true) {
+            var formDataD = {
+                'base64Image': imageData,
+                'serviceid': this.serviceid,
+                'columnname': this.columnname,
+                'is_delete': delete_needed,
+                'logged_in_user': this.user_id,
+                'index': this.index,
+                'documentid': this.documentid,
+                'notecontent': data.title,
+                'imgCategory': this.imgCategory,
+                'mode': 'image_upload',
+                'current_app_date': joinDate,
+            };
+
+            if(this.otherData != undefined && this.otherData != ''){
+                formDataD['otherData'] = this.otherData;
+            }
+        }else{
             if (this._CANVAS.toDataURL()) {
                 var bs64img = this._CANVAS.toDataURL();
-                imageData = bs64img.split(',')[1];
+                var blob = this.dataURLtoBlob(bs64img);
+            }
+
+            var formData = new FormData();
+            formData.append("blob", blob);
+            formData.append("serviceid", this.serviceid);
+            formData.append("columnname", this.columnname+'');
+            formData.append("is_delete", 'false');
+            formData.append("logged_in_user", this.user_id);
+            formData.append("index", this.index);
+            formData.append("documentid", this.documentid);
+            formData.append("notecontent", data.title);
+            formData.append("mode", 'image_upload');
+            formData.append("imgCategory", this.imgCategory);
+            formData.append("current_app_date", joinDate);
+
+            if(this.otherData != undefined && this.otherData != ''){
+                formData.append("otherData", this.otherData);
             }
         }
 
-        var param = {
-            'base64Image':imageData,
-            'serviceid':this.serviceid,
-            'columnname':this.columnname,
-            'is_delete':delete_needed,
-            'logged_in_user':this.user_id,
-            'index':this.index,
-            'documentid':this.documentid,
-            'notecontent':data.title,
-            'imgCategory':this.imgCategory,
-            'mode':'image_upload',
-            'current_app_date': joinDate,
-        };
-
-        if(this.otherData != undefined && this.otherData != ''){
-            param['otherData'] = this.otherData;
-        }
-
-        console.log('adding photo for', param.serviceid);
-        console.log('adding photo columnname', param.columnname);
-        console.log('need to delete image', param.is_delete);
+        var postParam = (delete_needed === true) ? formDataD : formData;
 
         this.showLoading();
-        this.httpClient.post(this.apiurl + "postPhotos.php", param, {headers: headers, observe: 'response'})
+        this.httpClient.post(this.apiurl + "postPhotos.php", postParam, {headers: headers, observe: 'response'})
             .subscribe(data => {
                 this.hideLoading();
 
@@ -639,6 +655,7 @@ export class ImageModalPage implements OnInit {
                             console.log('upload failed');
                             this.presentToast('Upload failed! Please try again \n');
                         }
+                        this.closeModal();
                     }
                 } else {
                     if (this.is_delete === true){
@@ -648,6 +665,7 @@ export class ImageModalPage implements OnInit {
                         console.log('upload failed');
                         this.presentToast('Upload failed! Please try again \n');
                     }
+                    this.closeModal();
                 }
             }, error => {
                 this.hideLoading();
@@ -655,9 +673,19 @@ export class ImageModalPage implements OnInit {
                 //console.log(error.message);
                 //console.error(error.message);
                 this.presentToast("Upload failed! Please try again \n" + error.message);
+                this.closeModal();
             });
     }
 
+    dataURLtoBlob(dataurl) {
+        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], {type: mime});
+    }
+    
     addZero(n) {
         return n < 10 ? '0' + n : n;
     }

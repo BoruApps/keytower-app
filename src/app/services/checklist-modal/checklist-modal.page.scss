@@ -190,13 +190,17 @@ form {
   }
 }
 .item-background-color{
-  --ion-item-background: #f1f1f1;
   border: 1px solid #767676;
   border-radius: 10px;
   overflow: hidden;
   align-items: center;
   margin-bottom: 25px;
 }
+
+.light.item-background-color{
+  --ion-item-background: #f1f1f1;
+}
+
 .disabled-field{
   pointer-events: none;
   display: none;

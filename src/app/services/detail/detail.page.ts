@@ -81,6 +81,7 @@ export class DetailPage implements OnInit {
     comments: any = [];
     allUsers: any = [];
     newComment: string;
+    changeRequestText: string;
 
     //actionSheet:any;
     constructor(
@@ -482,7 +483,9 @@ export class DetailPage implements OnInit {
                 if (success == true) {
                     this.newComment = '';
                     this.comments.unshift(responseData['data']);
-                    this.comments.splice(-1)
+                    if (this.comments.length > 5){
+                        this.comments.splice(-1)
+                    }
                     this.hideLoading();
                 } else {
                     this.hideLoading();
@@ -929,7 +932,47 @@ export class DetailPage implements OnInit {
     }
 
     goToGallery(serviceid){
-        this.router.navigate([`/services/detail/${serviceid}/gallery`, {servicename: this.serviceName}]);
+    }
+
+    async addChangeRequest(serviceid){
+        if (this.changeRequestText == '' || this.changeRequestText == undefined) {
+            this.presentToast('Please add something in Text. \n');
+            return false;
+        }
+
+        const params = {
+            crmid: this.serviceid,
+            user_id: this.userinfo.id,
+            commentcontent: this.changeRequestText,
+            type: 'changeRequest',
+        };
+        this.showLoading();
+
+        const headers = new HttpHeaders();
+        headers.append("Accept", 'application/json');
+        headers.append('Content-Type', 'application/json');
+        headers.append('Access-Control-Allow-Origin', '*');
+
+        this.httpClient.post(this.apiurl + "postComment.php", params, {headers: headers, observe: 'response'})
+            .subscribe(data => {
+                this.hideLoading();
+                const responseData = data.body;
+                const success = responseData['success'];
+                if (success == true) {
+                    this.comments.unshift(responseData['data']);
+
+                    if (this.comments.length > 5){
+                        this.comments.splice(-1)
+                    }
+
+                    this.presentToastPrimary('Change Request Added Successfully')
+                }
+            });
+    }
+
+    async cancelChangeRequest(serviceid){
+        this.changeRequestText = '';
+        this.blockGroups['Items']={open: false};
     }
 
     async addItem(serviceid) {
