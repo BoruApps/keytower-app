@@ -16,6 +16,7 @@ import { fabric } from 'fabric';
 import { Statement } from '@angular/compiler';
 import { AlertController } from '@ionic/angular';
 import { Platform } from '@ionic/angular';
+import {json} from '@angular-devkit/core';
 
 @Component({
     selector: 'app-image-modal',
@@ -558,7 +559,7 @@ export class ImageModalPage implements OnInit {
             };
 
             if(this.otherData != undefined && this.otherData != ''){
-                formDataD['otherData'] = this.otherData;
+                formDataD['otherData'] = JSON.stringify(this.otherData);
             }
         }else{
             if (this._CANVAS.toDataURL()) {
@@ -580,7 +581,7 @@ export class ImageModalPage implements OnInit {
             formData.append("current_app_date", joinDate);
 
             if(this.otherData != undefined && this.otherData != ''){
-                formData.append("otherData", this.otherData);
+                formData.append("otherData", JSON.stringify(this.otherData));
             }
         }
 
