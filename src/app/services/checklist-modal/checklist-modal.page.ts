@@ -11,6 +11,8 @@ import {ActionSheet, ActionSheetOptions} from '@ionic-native/action-sheet/ngx';
 import {ActivatedRoute, Router} from "@angular/router";
 import {DomSanitizer} from '@angular/platform-browser';
 import {ImageSlider} from "../image-slider/image-slider.page";
+import {Storage} from '@ionic/storage';
+declare var jQuery: any;
 
 @Component({
     selector: 'app-checklist-modal',
@@ -25,6 +27,7 @@ export class ChecklistModalPage implements OnInit {
     inspection_type: any;
     apiurl: any;
     updatefields: any = {};
+    currentTheme: any = {};
     checklistDetail: any = {};
     checklisthelper: any = {};
     user_id: any;
@@ -64,6 +67,7 @@ export class ChecklistModalPage implements OnInit {
 
     constructor(
         private camera: Camera,
+        public storage: Storage,
         private photoviewer: PhotoViewer,
         public imgpov: ImageProvider,
         public modalCtrl: ModalController,
@@ -84,7 +88,7 @@ export class ChecklistModalPage implements OnInit {
         this.sanitizer = sanitizer;
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         // console.table(this);
         this.modelId = this.navParams.data.paramID;
         this.serviceid = this.navParams.data.serviceid;
@@ -94,6 +98,9 @@ export class ChecklistModalPage implements OnInit {
         this.updatefields = this.navParams.data.current_updates;
         this.loadChecklist();
 
+        await this.getCurrentTheme().then((theme) => {
+            jQuery('.item-background-color').addClass(theme);
+        });
     }
 
     loading: any;
@@ -504,5 +511,17 @@ export class ChecklistModalPage implements OnInit {
 
     toggleHelper(columnname){
         this.checklisthelper[columnname] = (this.checklisthelper[columnname] == 1) ? 0 : 1;
+    }
+
+    async getCurrentTheme() {
+        var current_theme = this.storage.get('userdata').then((userdata) => {
+            if (userdata && userdata.length !== 0) {
+                //current_theme = userdata.theme.toLowerCase();
+                return userdata.theme.toLowerCase();
+            } else {
+                return false;
+            }
+        });
+        return current_theme;
     }
 }

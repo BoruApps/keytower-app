@@ -9,8 +9,6 @@ import { ServicesPage } from './services.page';
 import { ProfileModalPage } from './profile/profile.page';
 import { AllsowActivity } from "./All-sowActivity/All-sowActivity.page";
 import { SoWDelay } from "./SoW-Delay/SoW-Delay.page";
-import { ImageGallery } from "./image-gallery/image-gallery.page";
-import { imagePreview } from "./image-preview/image-preview.page";
 
 const routes: Routes = [
   {
@@ -26,7 +24,7 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ServicesPage, ProfileModalPage, AllsowActivity, SoWDelay,ImageGallery,imagePreview],
-    entryComponents: [ProfileModalPage, AllsowActivity, SoWDelay,ImageGallery,imagePreview],
+  declarations: [ServicesPage, ProfileModalPage, AllsowActivity, SoWDelay],
+    entryComponents: [ProfileModalPage, AllsowActivity, SoWDelay],
 })
 export class ServicesPageModule {}

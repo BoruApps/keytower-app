@@ -9,12 +9,6 @@
     </ion-toolbar>
 </ion-header>
 <ion-content>
-
-    <ion-item style="font-size: 13px;padding-right: 16px;">
-        <ion-checkbox style="width: 14px;height: 14px;" checked="{{picCompleted}}"  (ionChange)="addPicCompleted($event)"></ion-checkbox>
-        <ion-label>&nbsp;Mark {{modalTitle}} Section As Complete</ion-label>
-    </ion-item>
-
     <form #form="ngForm" class="ion-padding"  (ngSubmit)="completeOrder(serviceid)">
             <ion-item-group class="item-background-color" *ngFor="let service of servicedetail; let key=index">
                 <ion-list *ngIf="service.img.type != 'Sub-Sections' && service.img.type != 'Section' && service.img.type != 'Photos'" lines="none" >
@@ -96,5 +90,4 @@
                 </ion-item>
             </ion-item-group>
     </form>
-    <div class = "close-btn" (click)="closeModal()">Done</div>
 </ion-content>
