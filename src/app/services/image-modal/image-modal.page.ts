@@ -138,6 +138,10 @@ export class ImageModalPage implements OnInit {
         this.subSection = this.navParams.data.subSection;
         this.imgCategory = this.navParams.data.imgCategory;
         this.otherData = this.navParams.data.otherData;
+        
+        console.log('columnname = ',this.columnname);
+        console.log('index = ',this.index);
+        console.log('subSection = ',this.subSection);
     }
 
     ngAfterViewInit() {
@@ -592,81 +596,84 @@ export class ImageModalPage implements OnInit {
             .subscribe(data => {
                 this.hideLoading();
 
-                if (data['body']['success'] == true && this.columnname != undefined) {
-                    if (delete_needed === true){
-                        let imgLoc = this.appConst.workOrder[this.serviceid][this.columnname]['photos'][this.index]['photos'];
-                        let position = -1;
-                        for(var index = 0; index < imgLoc.length; index++) {
-                            console.log(this.documentid);
-                            (function(elm) {
-                                position = imgLoc[index].findIndex(function(obj, key) {
-                                    return (obj.documentid === elm.documentid);
-                                });
+                if (data['body']['success'] == true) {
+                    if (this.columnname != undefined && this.columnname + '' !== '') {
+                        if (delete_needed === true) {
+                            let imgLoc = this.appConst.workOrder[this.serviceid][this.columnname]['photos'][this.index]['photos'];
+                            let position = -1;
+                            for (var index = 0; index < imgLoc.length; index++) {
+                                console.log(this.documentid);
+                                (function(elm) {
+                                    position = imgLoc[index].findIndex(function(obj, key) {
+                                        return (obj.documentid === elm.documentid);
+                                    });
 
-                                if(position > -1) {
-                                    console.log(index, position);
-                                    elm.appConst.workOrder[elm.serviceid][elm.columnname]['photos'][elm.index]['photos'][index].splice(position,1);
-                                }
-                            })(this);
-                        }
-                        this.presentToastPrimary('Photo deleted successfully\n');
-                        this.closeModal();
-                    }else{
-                        if(this.appConst.workOrder[this.serviceid][this.columnname]['photos'][this.index]['photos'][this.subSection] == undefined) {
+                                    if (position > -1) {
+                                        console.log(index, position);
+                                        elm.appConst.workOrder[elm.serviceid][elm.columnname]['photos'][elm.index]['photos'][index].splice(position, 1);
+                                    }
+                                })(this);
+                            }
+                            this.presentToastPrimary('Photo deleted successfully\n');
+                            this.closeModal();
+                        } else {
+                            if (this.appConst.workOrder[this.serviceid][this.columnname]['photos'][this.index]['photos'][this.subSection] == undefined) {
                                 this.appConst.workOrder[this.serviceid][this.columnname]['photos'][this.index]['photos'][this.subSection] = [
                                     {
-                                        imgpath:data['body']['data']['image_path'],
-                                        documentid:data['body']['data']['image_id'],
+                                        imgpath: data['body']['data']['image_path'],
+                                        documentid: data['body']['data']['image_id'],
                                         userid: this.user_id
                                     }
                                 ];
+                            } else {
+                                this.appConst.workOrder[this.serviceid][this.columnname]['photos'][this.index]['photos'][this.subSection].push({
+                                    imgpath: data['body']['data']['image_path'],
+                                    documentid: data['body']['data']['image_id']
+                                });
+                            }
+                            console.log(' ========== appConst.workOrder ========== ',this.appConst.workOrder);
+                            this.presentToastPrimary('Photo saved successfully\n');
+                            this.closeModal();
                         }
-                        else {
-                            this.appConst.workOrder[this.serviceid][this.columnname]['photos'][this.index]['photos'][this.subSection].push({
-                                imgpath:data['body']['data']['image_path'],
-                                documentid:data['body']['data']['image_id']
-                            });
+                    } else if (this.imgCategory == 'ConDoc' || this.imgCategory == 'dailyNotes' || this.imgCategory == 'jsaDoc') {
+                        if (delete_needed === true) {
+                            if (data['body']['success'] == true) {
+                                console.log('Photo saved successfully');
+                                this.presentToastPrimary('Photo saved successfully\n');
+                                this.modalController.dismiss(
+                                    {
+                                        'is_delete': true,
+                                        'imgCategory': this.imgCategory,
+                                        'documentid': this.documentid
+                                    }
+                                );
+                            } else {
+                                console.log('Delete. failed');
+                                this.presentToast('Delete failed! Please try again \n');
+                            }
+                        } else {
+                            if (data['body']['success'] == true) {
+                                console.log('Photo saved successfully');
+                                this.presentToastPrimary('Photo saved successfully\n');
+                                this.modalController.dismiss(data['body']['data']);
+                            } else {
+                                console.log('upload failed');
+                                this.presentToast('Upload failed! Please try again \n');
+                            }
+                            this.closeModal();
                         }
-                        console.log(this.appConst.workOrder);
-                        this.presentToastPrimary('Photo saved successfully\n');
+                    } else {
+                        if (data['body']['success'] != true) {
+                            if (this.is_delete === true) {
+                                console.log('Delete. failed');
+                                this.presentToast('Delete failed! Please try again \n');
+                            } else {
+                                console.log('upload failed');
+                                this.presentToast('Upload failed! Please try again \n');
+                            }
+                        }
                         this.closeModal();
                     }
-                }else if (this.imgCategory == 'ConDoc' || this.imgCategory == 'dailyNotes' || this.imgCategory == 'jsaDoc'){
-                    if (delete_needed === true){
-                        if (data['body']['success'] == true){
-                            console.log('Photo saved successfully');
-                            this.presentToastPrimary('Photo saved successfully\n');
-                            this.modalController.dismiss(
-                                {
-                                    'is_delete':true,
-                                    'imgCategory':this.imgCategory,
-                                    'documentid' : this.documentid
-                                }
-                            );
-                        }else{
-                            console.log('Delete. failed');
-                            this.presentToast('Delete failed! Please try again \n');
-                        }
-                    }else{
-                        if (data['body']['success'] == true){
-                            console.log('Photo saved successfully');
-                            this.presentToastPrimary('Photo saved successfully\n');
-                            this.modalController.dismiss(data['body']['data']);
-                        }else{
-                            console.log('upload failed');
-                            this.presentToast('Upload failed! Please try again \n');
-                        }
-                        this.closeModal();
-                    }
-                } else {
-                    if (this.is_delete === true){
-                        console.log('Delete. failed');
-                        this.presentToast('Delete failed! Please try again \n');
-                    }else{
-                        console.log('upload failed');
-                        this.presentToast('Upload failed! Please try again \n');
-                    }
-                    this.closeModal();
                 }
             }, error => {
                 this.hideLoading();
