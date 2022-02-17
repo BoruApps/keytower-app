@@ -11,7 +11,9 @@ import {ActionSheet, ActionSheetOptions} from '@ionic-native/action-sheet/ngx';
 import {ActivatedRoute, Router} from "@angular/router";
 import {DomSanitizer} from '@angular/platform-browser';
 import {ImageSlider} from "../image-slider/image-slider.page";
+import { Platform } from '@ionic/angular';
 import {Storage} from '@ionic/storage';
+
 declare var jQuery: any;
 
 @Component({
@@ -37,6 +39,7 @@ export class ChecklistModalPage implements OnInit {
     defaultContent: any;
     value: any;
     field: any;
+    randomNumber: number = 0;
 
     buttonLabels = ['Take Photo', 'Upload from Library'];
     public subSection: number;
@@ -48,7 +51,7 @@ export class ChecklistModalPage implements OnInit {
         addCancelButtonWithLabel: 'Cancel',
         androidTheme: 1 //this.actionSheet.ANDROID_THEMES.THEME_HOLO_DARK,
     }
-
+    
     options: CameraOptions = {
         quality: 50,
         destinationType: this.camera.DestinationType.DATA_URL,
@@ -80,7 +83,8 @@ export class ChecklistModalPage implements OnInit {
         private router: Router,
         public loadingController: LoadingController,
         private actionSheet: ActionSheet,
-        private sanitizer: DomSanitizer
+        private sanitizer: DomSanitizer,
+        private platform: Platform
     ) {
         this.apiurl = this.appConst.getApiUrl();
         this.subSection = 0;
@@ -96,6 +100,7 @@ export class ChecklistModalPage implements OnInit {
         this.modalTitle = this.navParams.data.paramTitle;
         this.user_id = this.navParams.data.user_id;
         this.updatefields = this.navParams.data.current_updates;
+        this.randomNumber=this.randomNumberGenerate();
         this.loadChecklist();
 
         await this.getCurrentTheme().then((theme) => {
@@ -119,7 +124,9 @@ export class ChecklistModalPage implements OnInit {
             }
         }, 1000);
     }
-
+    randomNumberGenerate(){
+        return Math.floor(Math.random()*(9999999999-99999+1)+99999);
+    }
     urlSanitize(url) {
         console.log(url);
         url = this.sanitizer.bypassSecurityTrustResourceUrl(url);
@@ -347,6 +354,7 @@ export class ChecklistModalPage implements OnInit {
         modal.onDidDismiss().then((dataReturned) => {
             if (dataReturned !== null) {
                 this.dataReturned = dataReturned.data;
+                this.randomNumber=this.randomNumberGenerate();
                 //alert('Modal Sent Data :'+ dataReturned);
             }
         });

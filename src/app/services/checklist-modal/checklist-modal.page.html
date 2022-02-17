@@ -71,7 +71,7 @@
 
                                     <ion-row>
                                         <ion-col *ngFor="let _img of thumb" class="col-6 col-md-4 col-xl-3">
-                                            <ion-thumbnail  class="checklist-thumb" (click)="openSliderModal(_img,thumb)"> <img src="{{this.apiurl.replace('phoneapi/','')}}{{_img.imgpath}}"> </ion-thumbnail>
+                                            <ion-thumbnail  class="checklist-thumb" (click)="openSliderModal(_img,thumb)"> <img src="{{this.apiurl.replace('phoneapi/','')}}{{_img.imgpath}}?{{randomNumber}}"> </ion-thumbnail>
                                         </ion-col>
                                         <ion-col class="col-6 col-md-4 col-xl-3" style="display: inline-flex;align-items: center;">
                                             <ion-button style="height: 40px;width: 60px;" type="button" class="add-image" color="secondary" (click)="openActionSheet(service.columnname, _index)">
