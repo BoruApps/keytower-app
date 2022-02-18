@@ -122,13 +122,11 @@ export class DetailPage implements OnInit {
     loading: any;
 
     async doRefresh(event) {
-        this.showLoading();
 
-        this.loadDetails(this.serviceid);
+        await this.loadDetails(this.serviceid);
 
         event.target.complete();
 
-        this.hideLoading();
     }
 
     async showLoading() {
