@@ -15,6 +15,14 @@
 </ion-header>
 
 <ion-content>
+    <ion-refresher slot ="fixed" disabled="false" (ionRefresh)="doRefresh($event)" pullFactor="0.5" pullMin="100" pullMax="200">
+        <ion-refresher-content
+                pullingIcon="arrow-down"
+                pullingText="Pull to refresh"
+                refreshingSpinner="bubbles"
+                refreshingText="Refreshing....."></ion-refresher-content>
+    </ion-refresher>
+    
     <form #form="ngForm" (ngSubmit)="saveWO(workorderdetail.workorderid)">
         <ion-list>
             <!--read only fields-->
@@ -73,18 +81,15 @@
                                    (click)="toggleSection(blockservice.blockname)">
                             {{blockservice.blockname == 'COP' ? 'COP Photos' : blockservice.blockname}}
                         </ion-label>
-                        <svg *ngIf="!blockGroups[blockservice.blockname].open"
-                             style="margin-left: auto;float: right;" slot="end" xmlns="http://www.w3.org/2000/svg"
-                             width="20" height="20" fill="currentColor" class="bi bi-chevron-right"
+                        <svg *ngIf="!blockGroups[blockservice.blockname].open" style="margin-left: auto;float: right;"
+                             slot="end" xmlns:xlink="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                              viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                            <svg:path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
                         </svg>
-                        <svg *ngIf="blockGroups[blockservice.blockname].open"
-                             style="margin-left: auto;float: right;" xmlns="http://www.w3.org/2000/svg" width="20"
-                             height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                        <svg *ngIf="blockGroups[blockservice.blockname].open" style="margin-left: auto;float: right;"
+                             slot="end" xmlns:xlink="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <svg:path d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                         </svg>
                     </ion-item>
                     <div [ngClass]="{'section-active': blockGroups[blockservice.blockname].open, 'section': !blockGroups[blockservice.blockname].open}">
@@ -191,16 +196,14 @@
                         </ion-label>
 
                         <svg *ngIf="!blockGroups['Construction Documents'].open" style="margin-left: auto;float: right;"
-                             slot="end" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                             class="bi bi-chevron-right" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                             slot="end" xmlns:xlink="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <svg:path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
                         </svg>
                         <svg *ngIf="blockGroups['Construction Documents'].open" style="margin-left: auto;float: right;"
-                             xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                             class="bi bi-chevron-down" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                             slot="end" xmlns:xlink="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <svg:path d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                         </svg>
                     </ion-item>
                     <div [ngClass]="{'section-active': blockGroups['Construction Documents'].open, 'section': !blockGroups['Construction Documents'].open}">
@@ -227,16 +230,14 @@
                         </ion-label>
 
                         <svg *ngIf="!blockGroups['Scope of Work'].open" style="margin-left: auto;float: right;"
-                             slot="end" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                             class="bi bi-chevron-right" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                             slot="end" xmlns:xlink="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <svg:path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
                         </svg>
                         <svg *ngIf="blockGroups['Scope of Work'].open" style="margin-left: auto;float: right;"
-                             xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                             class="bi bi-chevron-down" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                             slot="end" xmlns:xlink="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <svg:path d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                         </svg>
                     </ion-item>
                     <div [ngClass]="{'section-active': blockGroups['Scope of Work'].open, 'section': !blockGroups['Scope of Work'].open}">
@@ -270,17 +271,16 @@
                         <ion-label style="font-size: 19px;" class="ion-padding blockheader"
                                    (click)="toggleSection('JSA')">JSA
                         </ion-label>
-                        <svg *ngIf="!blockGroups['JSA'].open" style="margin-left: auto;float: right;" slot="end"
-                             xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                             class="bi bi-chevron-right" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+
+                        <svg *ngIf="!blockGroups['JSA'].open" style="margin-left: auto;float: right;"
+                             slot="end" xmlns:xlink="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <svg:path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
                         </svg>
                         <svg *ngIf="blockGroups['JSA'].open" style="margin-left: auto;float: right;"
-                             xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                             class="bi bi-chevron-down" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                             slot="end" xmlns:xlink="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <svg:path d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                         </svg>
                     </ion-item>
                     <div [ngClass]="{'section-active': blockGroups['JSA'].open, 'section': !blockGroups['JSA'].open}">
@@ -312,17 +312,16 @@
                         <ion-label style="font-size: 19px;" class="ion-padding blockheader"
                                    (click)="toggleSection('Items')">Items
                         </ion-label>
-                        <svg *ngIf="!blockGroups['Items'].open" style="margin-left: auto;float: right;" slot="end"
-                             xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                             class="bi bi-chevron-right" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+
+                        <svg *ngIf="!blockGroups['Items'].open" style="margin-left: auto;float: right;"
+                             slot="end" xmlns:xlink="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <svg:path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
                         </svg>
                         <svg *ngIf="blockGroups['Items'].open" style="margin-left: auto;float: right;"
-                             xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                             class="bi bi-chevron-down" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                             slot="end" xmlns:xlink="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <svg:path d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                         </svg>
                     </ion-item>
                     <div *ngIf="1==2" [ngClass]="{'section-active': blockGroups['Items'].open, 'section': !blockGroups['Items'].open}">
@@ -387,17 +386,16 @@
                         <ion-label style="font-size: 19px;" class="ion-padding blockheader"
                                    (click)="toggleSection('Assets')">Assets
                         </ion-label>
-                        <svg *ngIf="!blockGroups['Assets'].open" style="margin-left: auto;float: right;" slot="end"
-                             xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                             class="bi bi-chevron-right" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+
+                        <svg *ngIf="!blockGroups['Assets'].open" style="margin-left: auto;float: right;"
+                             slot="end" xmlns:xlink="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <svg:path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
                         </svg>
                         <svg *ngIf="blockGroups['Assets'].open" style="margin-left: auto;float: right;"
-                             xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                             class="bi bi-chevron-down" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                             slot="end" xmlns:xlink="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <svg:path d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                         </svg>
                     </ion-item>
                     <div [ngClass]="{'section-active': blockGroups['Assets'].open, 'section': !blockGroups['Assets'].open}">
@@ -440,17 +438,16 @@
                         <ion-label style="font-size: 19px;" class="ion-padding blockheader"
                                    (click)="toggleSection('Comments')">Job Comments
                         </ion-label>
-                        <svg *ngIf="!blockGroups['Comments'].open" style="margin-left: auto;float: right;" slot="end"
-                             xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                             class="bi bi-chevron-right" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+
+                        <svg *ngIf="!blockGroups['Comments'].open" style="margin-left: auto;float: right;"
+                             slot="end" xmlns:xlink="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <svg:path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
                         </svg>
                         <svg *ngIf="blockGroups['Comments'].open" style="margin-left: auto;float: right;"
-                             xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                             class="bi bi-chevron-down" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                             slot="end" xmlns:xlink="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                             viewBox="0 0 16 16">
+                            <svg:path d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                         </svg>
                     </ion-item>
                     <div [ngClass]="{'section-active': blockGroups['Comments'].open, 'section': !blockGroups['Comments'].open}">
@@ -505,5 +502,4 @@
             </ion-item-group>
         </ion-list>
     </form>
-
 </ion-content>
