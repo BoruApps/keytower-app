@@ -79,7 +79,7 @@
                     <ion-item class="blockheader_2" lines="none">
                         <ion-label style="font-size: 19px;" class="ion-padding blockheader"
                                    (click)="toggleSection(blockservice.blockname)">
-                            {{blockservice.blockname == 'COP' ? 'COP Photos' || blockservice.blockname == 'TV requirements' : blockservice.blockname}}
+                            {{blockservice.blockname == 'COP' || blockservice.blockname == 'TV requirements' ? 'COP Photos' : blockservice.blockname}}
                         </ion-label>
                         <svg *ngIf="!blockGroups[blockservice.blockname].open" style="margin-left: auto;float: right;"
                              slot="end" xmlns:xlink="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
