@@ -159,7 +159,7 @@ export class TabsPage {
                     this.isLogged().then(result => {
                         if (!(result == false)) {
                             this.userinfo = result;
-                            this.refreshURCount(this.userinfo.id, 'underreview');
+                            //this.refreshURCount(this.userinfo.id, 'underreview');
 
                             this.user_id = this.userinfo.id;
                         } else {
