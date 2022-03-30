@@ -25,3 +25,51 @@ ion-badge.status{
 ion-text.status-text{
     color: white !important;
 }
+
+.overlay_red {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 99;
+    top: 0;
+    left: 0;
+    background-color: rgb(255,0,0);
+    background-color: rgba(255,0,0, 0.5);
+    overflow-x: hidden;
+    transition: 0.5s;
+    display: flex;
+}
+
+.overlay_red-content {
+    width: 90%;
+    text-align: center;
+    padding: 20px 5px;
+    margin-top: 30px;
+    background-color: white;
+    margin: auto;
+    border: 2px solid red;
+}
+
+.overlay_green {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 99;
+    top: 0;
+    left: 0;
+    background-color: rgb(0,128,0);
+    background-color: rgba(0,128,0, 0.5);
+    overflow-x: hidden;
+    transition: 0.5s;
+    display: flex;
+}
+
+.overlay_green-content {
+    width: 90%;
+    text-align: center;
+    padding: 20px 5px;
+    margin-top: 30px;
+    background-color: white;
+    margin: auto;
+    border: 2px solid green;
+}

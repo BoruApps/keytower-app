@@ -26,6 +26,8 @@ export class ServicesPage implements OnInit {
     count_completedServices: number = 0;
     apiurl: any;
     listofsowactivity: any[] = [];
+    planned_outage_red: any[] = [];
+    planned_outage_green: any[] = [];
     service = {
         id: '',
         tower: '', //Will be the Transferee + type of service
@@ -181,6 +183,19 @@ export class ServicesPage implements OnInit {
                 console.log('services page: login response was', success);
 
                 if (success == true) {
+                    
+                    //52717 = Get all red-green messages details
+                    var planned_outage = data['body']['Planned_Outage'];
+                    if (planned_outage != undefined){
+                        if (planned_outage['red'] != undefined && planned_outage['red'].length > 0){
+                            this.planned_outage_red = this.planned_outage_red.concat(planned_outage['red']);
+                        }
+                        if (planned_outage['green'] != undefined && planned_outage['green'].length > 0) {
+                            this.planned_outage_green = this.planned_outage_green.concat(planned_outage['green']);
+                        }
+                    } 
+                    //52717 END
+                    
                     var workorders = data['body']['data'];
                     console.log('services page: workorders', workorders);
                     if (data['body']['count'] > 0) {
@@ -226,51 +241,6 @@ export class ServicesPage implements OnInit {
         return await modal.present();
     }
 
-    async showAllsowActivity() {
-        var logged_user = {
-            user_id: this.user_id,
-        }
-        var headers = new HttpHeaders();
-        headers.append("Accept", 'application/json');
-        headers.append('Content-Type', 'application/x-www-form-urlencoded');
-        headers.append('Access-Control-Allow-Origin', '*');
-        this.showLoading();
-        this.httpClient.post(this.apiurl + "getallsowactivity.php", logged_user, {headers: headers, observe: 'response'})
-        .subscribe(data => {
-            this.hideLoading();
-            console.log(data['body']);
-            var success = data['body']['success'];
-            if (success == true) {
-                this.listofsowactivity = data['body']['data'];
-                this.showAllsowActivitypopup();
-            } else {
-                console.log('failed to fetch records');
-            }
-            console.log('listofsowactivity = ',this.listofsowactivity);
-        }, error => {
-            console.log('failed to fetch records');
-        });
-    }
-    async showAllsowActivitypopup() {
-        console.log('opening settings page for user id', this.user_id);
-        const modal = await this.modalCtrl.create({
-            component: AllsowActivity,
-            componentProps: {
-                "user_id": this.user_id,
-                "userinfo": this.userinfo,
-                "listofsowactivity": this.listofsowactivity,
-            }
-        });
-
-        modal.onDidDismiss().then((dataReturned) => {
-            if (dataReturned !== null) {
-                this.dataReturned = dataReturned.data;
-            }
-        });
-
-        return await modal.present();
-    }
-
     ngOnInit() {
         this.activatedRoute.params.subscribe((userData) => {
             if (userData.length !== 0) {
@@ -303,4 +273,8 @@ export class ServicesPage implements OnInit {
         });
     }
 
+    clearPlannedOutage(){
+        this.planned_outage_red = [];
+        this.planned_outage_green = [];
+    }
 }
