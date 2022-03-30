@@ -23,6 +23,8 @@ import {DailsNotesModalPage} from "../daily-notes/daily-notes.page";
 import { ImageSlider } from "../image-slider/image-slider.page";
 import { SoWAll } from "../SoW-All/SoW-All.page";
 import {CommentsModalPage} from '../comments/comments.page';
+import { HTTP } from '@ionic-native/http/ngx';
+import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
 
 const routes: Routes = [
   {
@@ -45,6 +47,8 @@ const routes: Routes = [
         SplashScreen,
         Camera,
         File,
+        HTTP,
+        FileOpener,
         { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     ],
 })

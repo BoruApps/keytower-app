@@ -3,8 +3,10 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {NavController, ToastController, AlertController, ModalController, Platform} from '@ionic/angular';
 import {ActionSheet, ActionSheetOptions} from '@ionic-native/action-sheet/ngx';
 import {PhotoLibrary} from '@ionic-native/photo-library/ngx';
+//import { formatDate } from '@angular/common';
 import {Storage} from '@ionic/storage';
 import {Camera, CameraOptions} from '@ionic-native/camera/ngx';
+//import { File } from '@ionic-native/file/ngx';
 import {ImageModalPage} from '../image-modal/image-modal.page';
 import {AddItemModalPage} from '../add-item/add-item.page';
 import {AddAssetModalPage} from '../add-asset/add-asset.page';
@@ -15,11 +17,16 @@ import {ImageProvider} from '../../providers/image/image';
 import {AppConstants} from '../../providers/constant/constant';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {LoadingController} from '@ionic/angular';
+// @ts-ignore
 import {InAppBrowser} from '@ionic-native/in-app-browser/ngx';
 import { SoWAll } from "../SoW-All/SoW-All.page";
+import { File } from '@ionic-native/file/ngx';
+import { HTTP } from '@ionic-native/http/ngx';
+import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
 
-declare var jQuery: any;
-import { get } from 'scriptjs';
+import jQuery from 'jquery'
+declare var jQuery: jQuery
+import { get } from 'scriptjs'
 
 @Component({
     selector: 'app-detail',
@@ -100,7 +107,10 @@ export class DetailPage implements OnInit {
         private iab: InAppBrowser,
         @Inject(LOCALE_ID) private locale: string,
         public loadingController: LoadingController,
-        private platform: Platform
+        private platform: Platform,
+        private file: File,
+        private http: HTTP,
+        private fileOpener: FileOpener
     ) {
         this.apiurl = this.appConst.getApiUrl();
         this.confirmButtonDisabled = false;
@@ -189,15 +199,42 @@ export class DetailPage implements OnInit {
         console.log('section is toggled', section, this.blockGroups[section].open);
     }
 
-    async openConDocViewPDF(pdf){
-        if (pdf.imgpath != ''){
-            var url = this.apiurl.replace('phoneapi/','')+pdf.imgpath;
-            if (this.platform.is('android')) {
-                url = 'https://docs.google.com/viewer?url=' + encodeURIComponent(url);
+    async openConDocViewPDF(pdf) {
+        if (pdf.imgpath != '') {
+            this.showLoading();
+            
+            var url = this.apiurl.replace('phoneapi/', '') + pdf.imgpath;
+
+            if (this.platform.is('ios')) {
+                var path = this.file.documentsDirectory;
+            } else {
+                var path = this.file.dataDirectory;
             }
-            console.log('opening pdf -> ',this.apiurl.replace('phoneapi/','')+pdf.imgpath)
-            var ref = window.open(url, '_blank', 'location=no');
-        }else{
+
+            this.http.sendRequest(url, {method: "get", responseType: "arraybuffer"}).then(
+                httpResponse => {
+                    var downloadedFile = new Blob([httpResponse.data], {type: 'application/pdf'});
+
+                    this.file.writeFile(path, "download.pdf", downloadedFile, {replace: true}).then(createdFile => {
+                        this.fileOpener.showOpenWithDialog(path + 'download.pdf', 'application/pdf')
+                            .then(() => {
+                                this.hideLoading();
+                                console.log('File is opened');
+                            })
+                            .catch(e => {
+                                this.hideLoading();
+                                console.log('Error opening file', e)
+                            });
+                    }).catch(err => {
+                        this.hideLoading();
+                        console.log('Error creating file', err)
+                    });
+                }
+            ).catch(err => {
+                this.hideLoading();
+                console.log('Error getting file', err)
+            })
+        } else {
             console.log('No path to open pdf')
         }
     }
