@@ -13,7 +13,18 @@
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
-
+<div *ngIf="planned_outage_red.length > 0" class="overlay_red" style="width:100%">
+  <div class="overlay_red-content" >
+    <p *ngFor="let planned_outage_msg of planned_outage_red">{{planned_outage_msg.msg}}</p>
+    <ion-button (click)="clearPlannedOutage()" size="small" color="secondary">Continue</ion-button>
+  </div>
+</div>
+<div class="overlay_green" style="width:100%" *ngIf="planned_outage_green.length > 0 && planned_outage_red.length == 0">
+  <div class="overlay_green-content" >
+    <p *ngFor="let planned_outage_msg of planned_outage_green">{{planned_outage_msg}}</p>
+    <ion-button (click)="clearPlannedOutage()" size="small" color="secondary">Continue</ion-button>
+  </div>
+</div>
 <ion-content>
     <ion-refresher slot ="fixed" disabled="false" (ionRefresh)="doRefresh($event)" pullFactor="0.5" pullMin="100" pullMax="200">
         <ion-refresher-content
