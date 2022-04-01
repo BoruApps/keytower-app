@@ -86,6 +86,8 @@ export class DetailPage implements OnInit {
     allUsers: any = [];
     newComment: string;
     changeRequestText: string;
+    planned_outage_red: any[] = [];
+    planned_outage_green: any[] = [];
 
     //actionSheet:any;
     constructor(
@@ -349,6 +351,19 @@ export class DetailPage implements OnInit {
                 //console.log(data['body']);
                 var success = data['body']['success'];
                 if (success == true) {
+                    //52717 = Get all red-green messages details
+                    var planned_outage = data['body']['Planned_Outage'];
+                    if (planned_outage != undefined){
+                        if (planned_outage['red'] != undefined && planned_outage['red'].length > 0){
+                            this.planned_outage_red = planned_outage['red'];
+                        }
+                        if (planned_outage['green'] != undefined && planned_outage['green'].length > 0) {
+                            this.planned_outage_green = planned_outage['green'];
+                        }
+                    }
+                    console.log('this.planned_outage_red = ',this.planned_outage_red);
+                    //52717 END
+
                     var workorder = data['body']['data'];
                     this.inspection_type = data['body']['inspection_type'];
                     this.constructionDocuments = data['body']['constructionDocuments'];
@@ -453,6 +468,30 @@ export class DetailPage implements OnInit {
                 this.hideLoading();
                 console.log('failed to fetch record');
             });
+    }
+
+    clearPlannedOutage(){
+        const reqData = {
+            planned_outage_red: this.planned_outage_red,
+            user_id: this.userinfo.id,
+            order: 'DESC',
+        };
+
+        const headers = new HttpHeaders();
+        headers.append('Accept', 'application/json');
+        headers.append('Content-Type', 'application/x-www-form-urlencoded');
+        headers.append('Access-Control-Allow-Origin', '*');
+        this.httpClient.post(this.apiurl + "updateActivity.php", reqData, {headers: headers, observe: 'response'})
+        .subscribe(data => {
+            const responseData = data.body;
+            const success = responseData['success'];
+            if (success == true) {
+                this.planned_outage_red = [];
+                this.planned_outage_green = [];
+            }
+        }, error => {
+            console.log('failed to update Activity');
+        });
     }
 
     addZero(n) {

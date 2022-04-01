@@ -26,8 +26,6 @@ export class ServicesPage implements OnInit {
     count_completedServices: number = 0;
     apiurl: any;
     listofsowactivity: any[] = [];
-    planned_outage_red: any[] = [];
-    planned_outage_green: any[] = [];
     service = {
         id: '',
         tower: '', //Will be the Transferee + type of service
@@ -184,18 +182,6 @@ export class ServicesPage implements OnInit {
 
                 if (success == true) {
                     
-                    //52717 = Get all red-green messages details
-                    var planned_outage = data['body']['Planned_Outage'];
-                    if (planned_outage != undefined){
-                        if (planned_outage['red'] != undefined && planned_outage['red'].length > 0){
-                            this.planned_outage_red = this.planned_outage_red.concat(planned_outage['red']);
-                        }
-                        if (planned_outage['green'] != undefined && planned_outage['green'].length > 0) {
-                            this.planned_outage_green = this.planned_outage_green.concat(planned_outage['green']);
-                        }
-                    } 
-                    //52717 END
-                    
                     var workorders = data['body']['data'];
                     console.log('services page: workorders', workorders);
                     if (data['body']['count'] > 0) {
@@ -271,10 +257,5 @@ export class ServicesPage implements OnInit {
                 }
             }
         });
-    }
-
-    clearPlannedOutage(){
-        this.planned_outage_red = [];
-        this.planned_outage_green = [];
     }
 }
