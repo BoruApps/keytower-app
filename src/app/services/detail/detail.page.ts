@@ -471,27 +471,30 @@ export class DetailPage implements OnInit {
     }
 
     clearPlannedOutage(){
-        const reqData = {
-            planned_outage_red: this.planned_outage_red,
-            user_id: this.userinfo.id,
-            order: 'DESC',
-        };
-
-        const headers = new HttpHeaders();
-        headers.append('Accept', 'application/json');
-        headers.append('Content-Type', 'application/x-www-form-urlencoded');
-        headers.append('Access-Control-Allow-Origin', '*');
-        this.httpClient.post(this.apiurl + "updateActivity.php", reqData, {headers: headers, observe: 'response'})
-        .subscribe(data => {
-            const responseData = data.body;
-            const success = responseData['success'];
-            if (success == true) {
-                this.planned_outage_red = [];
-                this.planned_outage_green = [];
-            }
-        }, error => {
-            console.log('failed to update Activity');
-        });
+        this.planned_outage_green = [];
+        if(this.planned_outage_red.length > 0){
+            this.showLoading();
+            const reqData = {
+                planned_outage_red: this.planned_outage_red,
+                user_id: this.userinfo.id,
+                order: 'DESC',
+            };
+            const headers = new HttpHeaders();
+            headers.append('Accept', 'application/json');
+            headers.append('Content-Type', 'application/x-www-form-urlencoded');
+            headers.append('Access-Control-Allow-Origin', '*');
+            this.httpClient.post(this.apiurl + "updateActivity.php", reqData, {headers: headers, observe: 'response'})
+            .subscribe(data => {
+                const responseData = data.body;
+                const success = responseData['success'];
+                if (success == true) {
+                    this.hideLoading();
+                    this.planned_outage_red = [];
+                }
+            }, error => {
+                console.log('failed to update Activity');
+            });
+        }
     }
 
     addZero(n) {
