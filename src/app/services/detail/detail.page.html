@@ -21,7 +21,7 @@
 </div>
 <div class="overlay_red" style="width:100%" *ngIf="planned_outage_green.length > 0 && planned_outage_red.length == 0">
   <div class="overlay_red-content" >
-    <p *ngFor="let planned_outage_msg of planned_outage_green">{{planned_outage_msg}}</p>
+    <p *ngFor="let planned_outage_msg of planned_outage_green">{{planned_outage_msg.msg}}</p>
     <ion-button (click)="clearPlannedOutage()" size="small" color="secondary">Continue</ion-button>
   </div>
 </div>
