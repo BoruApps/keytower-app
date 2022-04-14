@@ -310,7 +310,7 @@
                 <div>
                     <ion-item class="blockheader_2" lines="none">
                         <ion-label style="font-size: 19px;" class="ion-padding blockheader"
-                                   (click)="toggleSection('Items')">Items
+                                   (click)="toggleSection('Items')">Change Request
                         </ion-label>
 
                         <svg *ngIf="!blockGroups['Items'].open" style="margin-left: auto;float: right;"
@@ -324,37 +324,6 @@
                             <svg:path d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                         </svg>
                     </ion-item>
-                    <div *ngIf="1==2" [ngClass]="{'section-active': blockGroups['Items'].open, 'section': !blockGroups['Items'].open}">
-                        <ion-row>
-                            <ion-col size="6">
-                                <ion-button (click)="addItem(workorderdetail.workorderid)" expand="block"
-                                            size="3" color="secondary">Add Item
-                                </ion-button>
-                            </ion-col>
-                        </ion-row>
-                        <ion-grid *ngIf="jobItems.length > 0">
-                            <ion-row class="table-header">
-                                <ion-col>
-                                    Product Name
-                                </ion-col>
-                                <ion-col>
-                                    Part Number
-                                </ion-col>
-                                <ion-col>
-                                    Quantity
-                                </ion-col>
-                            </ion-row>
-                            <ion-row class="table-row" *ngFor="let item of jobItems">
-                                <ion-col>{{item['productname']}}</ion-col>
-                                <ion-col>{{item['productcode']}}</ion-col>
-                                <ion-col>{{item['quantity']}}</ion-col>
-                            </ion-row>
-                        </ion-grid>
-                        <ion-grid *ngIf="jobItems.length == 0" style="text-align: center;">
-                            <ion-text>No Item in this Job</ion-text>
-                        </ion-grid>
-                    </div>
-
                     <div [ngClass]="{'section-active': blockGroups['Items'].open, 'section': !blockGroups['Items'].open}">
                         <ion-grid>
                             <ion-item>
